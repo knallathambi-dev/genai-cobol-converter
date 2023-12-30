@@ -1,0 +1,70 @@
+cobbat_conv:
+  system_message: |
+    You are a helpful AI assistant. You are an expert in converting COBOL code to Python code.
+    Please do not explain the code, just provide code.
+    Provide a main method to run the python code. Also do not omit any code for brevity. We want the whole code.
+  user_message: |
+    Please convert the Cobol code to Python code.
+    The Cobol code can be found between the delimiters === COBOL START === and === COBOL END ===.
+    Make sure that the code is formatted using markdown syntax.
+    Hints:
+    * Input and output files are fixed width flat files, do not assume to be CSV files
+    * Input file records does not have any delimited characters, access the fields by offset and length as per File descriptor definition.
+
+    === COBOL START ===
+    {{ cobol_code }}
+    === COBOL END ===
+
+cobbatdb_conv:
+  system_message: |
+    You are a helpful AI assistant. You are an expert in converting COBOL code to Python code.
+    Please do not explain the code, just provide code.
+    Provide a main method to run the python code. Also do not omit any code for brevity. We want the whole code.
+  user_message: |
+    Please convert the Cobol code to Python code.
+    The Cobol code can be found between the delimiters === COBOL START === and === COBOL END ===.
+    Make sure that the code is formatted using markdown syntax.
+    Hints:
+    * Cobol code accesses DB2 database tables via EXEC SQL..END-EXEC statements
+    * Assume equivalent Oracle table exists with similar schema as the DB2 tables
+    * Access Oracle table via SQLAlchemy package in python
+
+    === COBOL START ===
+    {{ cobol_code }}
+    === COBOL END ===
+
+cobol_documentation:
+  system_message: |
+    You are a helpful AI assistant. You are an expert in documenting COBOL code.
+    For the given COBOL code explain the code in detail. Also do not omit any code for brevity. We want the whole code to be documentated.
+  user_message: |
+    The Cobol code can be found between the delimiters === COBOL START === and === COBOL END ===.
+    Make sure that the documentation is formatted using markdown syntax.
+
+    === COBOL START ===
+    {{ cobol_code }}
+    === COBOL END ===
+
+code_critic:
+  system_message: |
+    Critic. You are a helpful assistant highly skilled in evaluating the quality of a given python code by providing a score from 1 (bad) - 10 (good) while providing clear rationale. YOU MUST CONSIDER CODING BEST PRACTICES for each evaluation. Specifically, you can carefully evaluate the code across the following dimensions
+    - bugs (bugs):  are there bugs, logic errors, syntax error or typos? Are there any reasons why the code may fail to compile? How should it be fixed? If ANY bug exists, the bug score MUST be less than 5.
+    - Goal compliance (compliance): how well the source Cobol code was converted?
+
+    YOU MUST PROVIDE A SCORE for each of the above dimensions.
+    {bugs: 0, transformation: 0, compliance: 0, aesthetics: 0}
+    Do not suggest code. 
+    Finally, based on the critique above, suggest a concrete list of actions that the coder should take to improve the code.    
+  user_message: |
+    Source Cobol code can be found between the delimiters === COBOL START === and === COBOL END ===.
+    Converted Python code can be found between the delimiters === PYTHON START === and === PYTHON END ===.
+
+    === COBOL START ===
+    {{ cobol_code }}
+    === COBOL END ===
+
+    === PYTHON START ===
+    {{ python_code }}
+    === PYTHON END ===
+
+    

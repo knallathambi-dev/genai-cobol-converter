@@ -1,0 +1,14 @@
+genai_providers:
+  - name: openai
+    model: gpt-4
+    temperature: 0.2
+  # - name: google
+  #   model: gemini-pro
+  #   temperature: 0.2
+cobol_artifacts:
+  - name: PINVRPT
+    path: ./resources/cobol_source/COBBAT/PINVRPT.cbl
+    category: cobbat_conv
+  - name: LDB2SAMP
+    path: ./resources/cobol_source/COBBATDB/LDB2SAMP.cbl
+    category: cobbatdb_conv

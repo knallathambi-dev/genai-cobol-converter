@@ -1,0 +1,8 @@
+google-generativeai==0.3.2
+openai==1.6.1
+black==23.12.1
+python-dotenv==1.0.0
+pylint==3.0.3
+loguru==0.7.2
+jinja2==3.1.2
+PyYAML==6.0.1
