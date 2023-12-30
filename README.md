@@ -1,5 +1,7 @@
 # COBOL to Python conversion using GenAI
 
+![Process Diagram](docs/assets/GenAI%20COBOL%20Converter.png)
+
 ## Project setup
 
 Create python virtual environment and activate
