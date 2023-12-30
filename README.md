@@ -4,22 +4,26 @@
 
 ## Project setup
 
-Create python virtual environment and activate
-```
-> python -m venv .venv
-> .venv/Scripts/activate 
-```
+* Create python virtual environment and activate
+    ```
+    > python -m venv .venv
+    # windows
+    > .venv\Scripts\activate.bat            
+    # linux/mac 
+    > source .venv/bin/activate             
+    ```
 
-Install Python packages
-```
-(.venv) > pip install -r requirements.txt
-```
+* Install Python packages
+    ```
+    (.venv) > pip install -r requirements.txt
+    ```
 
-Create .env file copy from .env_local and add openai & google api key
+* Create .env file and copy contents from [.env_local](.env_local). Add OpenAI and Google API key
 
 ## Run Conversion pipeline
 
-***playbook.yml*** provides GenAI provider settings and source COBOL artifacts
+[playbook.yml](prompts.yml) provides GenAI provider settings and source COBOL artifacts.
+
 Execute the below command to start the execution
 ```
 > python -m cob2py_app.main playbook.yml
