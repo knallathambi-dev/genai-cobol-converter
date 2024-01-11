@@ -1,0 +1,55 @@
+import datetime
+
+
+def read_record(file, start, length):
+    file.seek(start)
+    return file.read(length).strip()
+
+
+def write_report(file, record):
+    file.write(record + "\n")
+
+
+def process_file(input_file, output_file, report_header):
+    input_file.seek(0)
+    output_file.write(report_header + "\n")
+    output_file.write("REPORT DATE: " + str(datetime.datetime.now().date()) + "\n\n")
+    output_file.write("SERIAL    STATUS    TYPE    FORMULA    QA    WEIGHT\n")
+    output_file.write(
+        "------------  ----------  ----------  ---------------  ----  -----------\n"
+    )
+
+    eof = False
+    while not eof:
+        serial = read_record(input_file, 0, 12)
+        status = read_record(input_file, 22, 1)
+        if status == "0":
+            status = "ACTIVE"
+        elif status == "1":
+            status = "SPENT"
+        elif status == "3":
+            status = "DESTROYED"
+        else:
+            status = "OTHER"
+        type = read_record(input_file, 12, 10)
+        formula = read_record(input_file, 32, 15)
+        qa = read_record(input_file, 47, 4)
+        weight = read_record(input_file, 71, 10)
+        record = f"{serial}  {status}  {type}  {formula}  {qa}  {weight}"
+        write_report(output_file, record)
+        eof = len(input_file.readline()) == 0
+
+
+def main():
+    with open("PINV", "r") as inall, open("RPTALL", "w") as rptall:
+        process_file(inall, rptall, "PROPELLANT GRAIN INVENTORY REPORT - ALL")
+    with open("PACT", "r") as inact, open("RPTACT", "w") as rptact:
+        process_file(inact, rptact, "PROPELLANT GRAIN INVENTORY REPORT - ACTIVE")
+    with open("PSPN", "r") as inspn, open("RPTSPN", "w") as rptspn:
+        process_file(inspn, rptspn, "PROPELLANT GRAIN INVENTORY REPORT - SPENT")
+    with open("PDES", "r") as indes, open("RPTDES", "w") as rptdes:
+        process_file(indes, rptdes, "PROPELLANT GRAIN INVENTORY REPORT - DESTROYED")
+
+
+if __name__ == "__main__":
+    main()

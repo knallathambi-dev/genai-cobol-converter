@@ -1,0 +1,18 @@
+************* Module PINVRPT__conv_python_1
+output\Run_20231231182816\openai\PINVRPT\PINVRPT__conv_python_1.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+output\Run_20231231182816\openai\PINVRPT\PINVRPT__conv_python_1.py:1:0: C0103: Module name "PINVRPT__conv_python_1" doesn't conform to snake_case naming style (invalid-name)
+output\Run_20231231182816\openai\PINVRPT\PINVRPT__conv_python_1.py:33:0: C0116: Missing function or method docstring (missing-function-docstring)
+output\Run_20231231182816\openai\PINVRPT\PINVRPT__conv_python_1.py:36:4: E0602: Undefined variable 'report_active' (undefined-variable)
+output\Run_20231231182816\openai\PINVRPT\PINVRPT__conv_python_1.py:37:4: E0602: Undefined variable 'report_spent' (undefined-variable)
+output\Run_20231231182816\openai\PINVRPT\PINVRPT__conv_python_1.py:38:4: E0602: Undefined variable 'report_destroyed' (undefined-variable)
+output\Run_20231231182816\openai\PINVRPT\PINVRPT__conv_python_1.py:34:4: W0612: Unused variable 'current_date' (unused-variable)
+output\Run_20231231182816\openai\PINVRPT\PINVRPT__conv_python_1.py:42:0: C0116: Missing function or method docstring (missing-function-docstring)
+output\Run_20231231182816\openai\PINVRPT\PINVRPT__conv_python_1.py:57:12: W0622: Redefining built-in 'type' (redefined-builtin)
+output\Run_20231231182816\openai\PINVRPT\PINVRPT__conv_python_1.py:43:4: W0603: Using the global statement (global-statement)
+output\Run_20231231182816\openai\PINVRPT\PINVRPT__conv_python_1.py:44:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+output\Run_20231231182816\openai\PINVRPT\PINVRPT__conv_python_1.py:44:36: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+output\Run_20231231182816\openai\PINVRPT\PINVRPT__conv_python_1.py:69:0: C0116: Missing function or method docstring (missing-function-docstring)
+
+------------------------------------------------------------------
+Your code has been rated at 6.27/10 (previous run: 6.52/10, -0.25)
+

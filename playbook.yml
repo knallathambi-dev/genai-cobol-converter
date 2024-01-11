@@ -6,9 +6,12 @@ genai_providers:
     model: gemini-pro
     temperature: 0.2
 cobol_artifacts:
+  # - name: PINVRPT
+  #   path: ./resources/cobol_source/COBBAT/PINVRPT.cbl
+  #   category: cobbat_conv
   - name: PINVRPT
-    path: ./resources/cobol_source/COBBAT/PINVRPT.cbl
+    path: ./resources/cobol_source/GNUCOBOL/PINVRPT.cbl
     category: cobbat_conv
-  - name: LDB2SAMP
-    path: ./resources/cobol_source/COBBATDB/LDB2SAMP.cbl
-    category: cobbatdb_conv
+  # - name: LDB2SAMP
+  #   path: ./resources/cobol_source/COBBATDB/LDB2SAMP.cbl
+  #   category: cobbatdb_conv

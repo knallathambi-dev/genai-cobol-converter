@@ -1,0 +1,315 @@
+```python
+import datetime
+
+# Define the input and output file names
+inall_file = "PINV"
+inact_file = "PACT"
+inspn_file = "PSPN"
+indes_file = "PDES"
+rptall_file = "RPTALL"
+rptact_file = "RPTACT"
+rptspn_file = "RPTSPN"
+rptdes_file = "RPTDES"
+
+# Define the record layouts
+inall_record_layout = [
+    ("GRAIN-SERIAL-ALL", 12, "9"),
+    ("GRAIN-TYPE-ALL", 10, "X"),
+    ("GRAIN-FORMULA-ALL", 15, "X"),
+    ("GRAIN-STATUS-ALL", 1, "X"),
+    ("GRAIN-QA-ALL", 4, "X"),
+    ("GRAIN-QUALITY-ALL", 2, "9"),
+    ("FILLER", 10, "9"),
+    ("FILLER", 10, "9"),
+    ("GRAIN-WEIGHT-ALL", 10, "9"),
+    ("FILLER", 375, "X"),
+]
+inact_record_layout = [
+    ("GRAIN-SERIAL-ACT", 12, "9"),
+    ("GRAIN-TYPE-ACT", 10, "X"),
+    ("GRAIN-FORMULA-ACT", 15, "X"),
+    ("GRAIN-STATUS-ACT", 1, "X"),
+    ("GRAIN-QA-ACT", 4, "X"),
+    ("GRAIN-QUALITY-ACT", 2, "9"),
+    ("FILLER", 10, "9"),
+    ("FILLER", 10, "9"),
+    ("GRAIN-WEIGHT-ACT", 10, "9"),
+    ("FILLER", 375, "X"),
+]
+inspn_record_layout = [
+    ("GRAIN-SERIAL-SPN", 12, "9"),
+    ("GRAIN-TYPE-SPN", 10, "X"),
+    ("GRAIN-FORMULA-SPN", 15, "X"),
+    ("GRAIN-STATUS-SPN", 1, "X"),
+    ("GRAIN-QA-SPN", 4, "X"),
+    ("GRAIN-QUALITY-SPN", 2, "9"),
+    ("FILLER", 10, "9"),
+    ("FILLER", 10, "9"),
+    ("GRAIN-WEIGHT-SPN", 10, "9"),
+    ("FILLER", 375, "X"),
+]
+indes_record_layout = [
+    ("GRAIN-SERIAL-DES", 12, "9"),
+    ("GRAIN-TYPE-DES", 10, "X"),
+    ("GRAIN-FORMULA-DES", 15, "X"),
+    ("GRAIN-STATUS-DES", 1, "X"),
+    ("GRAIN-QA-DES", 4, "X"),
+    ("GRAIN-QUALITY-DES", 2, "9"),
+    ("FILLER", 10, "9"),
+    ("FILLER", 10, "9"),
+    ("GRAIN-WEIGHT-DES", 10, "9"),
+    ("FILLER", 375, "X"),
+]
+
+# Define the output record layouts
+out_record_layout = [
+    ("SERIAL-OUT", 12, "X"),
+    ("FILLER", 2, "X", " "),
+    ("STATUS-OUT", 10, "X"),
+    ("FILLER", 2, "X", " "),
+    ("TYPE-OUT", 10, "X"),
+    ("FILLER", 2, "X", " "),
+    ("FORMULA-OUT", 15, "X"),
+    ("FILLER", 2, "X", " "),
+    ("QA-OUT", 4, "X"),
+    ("FILLER", 2, "X", " "),
+    ("WEIGHT-OUT", 10, "X"),
+    ("FILLER", 1, "X", "G"),
+]
+date_line_layout = [
+    ("FILLER", 12, "X", "REPORT DATE:"),
+    ("FILLER", 1, "X", " "),
+    ("DT-YEAR", 4, "9"),
+    ("FILLER", 1, "X", "/"),
+    ("DT-MONTH", 2, "9"),
+    ("FILLER", 1, "X", "/"),
+    ("DT-DAY", 2, "9"),
+]
+header_1_layout = [("FILLER", 100, "X", "HAYNIE RESEARCH & DEVELOPMENT")]
+header_all_layout = [("FILLER", 100, "X", "PROPELLANT GRAIN INVENTORY REPORT - ALL")]
+header_active_layout = [
+    ("FILLER", 100, "X", "PROPELLANT GRAIN INVENTORY REPORT - ACTIVE")
+]
+header_spent_layout = [
+    ("FILLER", 100, "X", "PROPELLANT GRAIN INVENTORY REPORT - SPENT")
+]
+header_destroyed_layout = [
+    ("FILLER", 100, "X", "PROPELLANT GRAIN INVENTORY REPORT - DESTROYED")
+]
+header_3_layout = [
+    ("FILLER", 14, "X", "SERIAL"),
+    ("FILLER", 12, "X", "STATUS"),
+    ("FILLER", 12, "X", "TYPE"),
+    ("FILLER", 17, "X", "FORMULA"),
+    ("FILLER", 6, "X", "QA"),
+    ("FILLER", 11, "X", "WEIGHT"),
+]
+header_4_layout = [
+    ("FILLER", 12, "X", "------------"),
+    ("FILLER", 2, "X", " "),
+    ("FILLER", 10, "X", "----------"),
+    ("FILLER", 2, "X", " "),
+    ("FILLER", 10, "X", "----------"),
+    ("FILLER", 2, "X", " "),
+    ("FILLER", 15, "X", "---------------"),
+    ("FILLER", 2, "X", " "),
+    ("FILLER", 4, "X", "----"),
+    ("FILLER", 2, "X", " "),
+    ("FILLER", 11, "X", "-----------"),
+]
+
+# Open the input and output files
+with open(inall_file, "rb") as inall_file, open(
+    inact_file, "rb"
+) as inact_file, open(inspn_file, "rb") as inspn_file, open(
+    indes_file, "rb"
+) as indes_file, open(rptall_file, "w") as rptall_file, open(
+    rptact_file, "w"
+) as rptact_file, open(rptspn_file, "w") as rptspn_file, open(
+    rptdes_file, "w"
+) as rptdes_file:
+
+    # Get the current date
+    current_date = datetime.datetime.now()
+
+    # Format the date for the report
+    dt_year = current_date.strftime("%Y")
+    dt_month = current_date.strftime("%m")
+    dt_day = current_date.strftime("%d")
+
+    # Write the header information to the report files
+    rptall_file.write(header_1_layout.to_text())
+    rptall_file.write("\n")
+    rptall_file.write(header_all_layout.to_text())
+    rptall_file.write("\n")
+    rptall_file.write(date_line_layout.to_text(dt_year=dt_year, dt_month=dt_month, dt_day=dt_day))
+    rptall_file.write("\n")
+    rptall_file.write("".join(["-" for _ in range(200)]))
+    rptall_file.write("\n")
+    rptall_file.write(header_3_layout.to_text())
+    rptall_file.write("\n")
+    rptall_file.write(header_4_layout.to_text())
+    rptall_file.write("\n")
+
+    rptact_file.write(header_1_layout.to_text())
+    rptact_file.write("\n")
+    rptact_file.write(header_active_layout.to_text())
+    rptact_file.write("\n")
+    rptact_file.write(date_line_layout.to_text(dt_year=dt_year, dt_month=dt_month, dt_day=dt_day))
+    rptact_file.write("\n")
+    rptact_file.write("".join(["-" for _ in range(200)]))
+    rptact_file.write("\n")
+    rptact_file.write(header_3_layout.to_text())
+    rptact_file.write("\n")
+    rptact_file.write(header_4_layout.to_text())
+    rptact_file.write("\n")
+
+    rptspn_file.write(header_1_layout.to_text())
+    rptspn_file.write("\n")
+    rptspn_file.write(header_spent_layout.to_text())
+    rptspn_file.write("\n")
+    rptspn_file.write(date_line_layout.to_text(dt_year=dt_year, dt_month=dt_month, dt_day=dt_day))
+    rptspn_file.write("\n")
+    rptspn_file.write("".join(["-" for _ in range(200)]))
+    rptspn_file.write("\n")
+    rptspn_file.write(header_3_layout.to_text())
+    rptspn_file.write("\n")
+    rptspn_file.write(header_4_layout.to_text())
+    rptspn_file.write("\n")
+
+    rptdes_file.write(header_1_layout.to_text())
+    rptdes_file.write("\n")
+    rptdes_file.write(header_destroyed_layout.to_text())
+    rptdes_file.write("\n")
+    rptdes_file.write(date_line_layout.to_text(dt_year=dt_year, dt_month=dt_month, dt_day=dt_day))
+    rptdes_file.write("\n")
+    rptdes_file.write("".join(["-" for _ in range(200)]))
+    rptdes_file.write("\n")
+    rptdes_file.write(header_3_layout.to_text())
+    rptdes_file.write("\n")
+    rptdes_file.write(header_4_layout.to_text())
+    rptdes_file.write("\n")
+
+    # Read the input files and write the output records to the report files
+    inall_eof_switch = "N"
+    inact_eof_switch = "N"
+    inspn_eof_switch = "N"
+    indes_eof_switch = "N"
+    while inall_eof_switch != "Y":
+        # Read a record from the INALL file
+        inall_record = inall_file.read(120)
+
+        # Check if the end of the file has been reached
+        if not inall_record:
+            inall_eof_switch = "Y"
+            break
+
+        # Parse the INALL record
+        grain_serial_all = inall_record[0:12].decode("utf-8").strip()
+        grain_type_all = inall_record[12:22].decode("utf-8").strip()
+        grain_formula_all = inall_record[22:37].decode("utf-8").strip()
+        grain_status_all = inall_record[37:38].decode("utf-8").strip()
+        grain_qa_all = inall_record[38:42].decode("utf-8").strip()
+        grain_quality_all = inall_record[42:44].decode("utf-8").strip()
+        grain_weight_all = inall_record[44:54].decode("utf-8").strip()
+
+        # Convert the grain status to a string
+        if grain_status_all == "0":
+            status_out = "ACTIVE"
+        elif grain_status_all == "1":
+            status_out = "SPENT"
+        elif grain_status_all == "3":
+            status_out = "DESTROYED"
+        else:
+            status_out = "OTHER"
+
+        # Create the output record
+        out_record = out_record_layout.to_text(
+            serial_out=grain_serial_all,
+            status_out=status_out,
+            type_out=grain_type_all,
+            formula_out=grain_formula_all,
+            qa_out=grain_qa_all,
+            weight_out=grain_weight_all,
+        )
+
+        # Write the output record to the RPTALL file
+        rptall_file.write(out_record)
+        rptall_file.write("\n")
+
+    while inact_eof_switch != "Y":
+        # Read a record from the INACT file
+        inact_record = inact_file.read(120)
+
+        # Check if the end of the file has been reached
+        if not inact_record:
+            inact_eof_switch = "Y"
+            break
+
+        # Parse the INACT record
+        grain_serial_act = inact_record[0:12].decode("utf-8").strip()
+        grain_type_act = inact_record[12:22].decode("utf-8").strip()
+        grain_formula_act = inact_record[22:37].decode("utf-8").strip()
+        grain_status_act = inact_record[37:38].decode("utf-8").strip()
+        grain_qa_act = inact_record[38:42].decode("utf-8").strip()
+        grain_quality_act = inact_record[42:44].decode("utf-8").strip()
+        grain_weight_act = inact_record[44:54].decode("utf-8").strip()
+
+        # Convert the grain status to a string
+        if grain_status_act == "0":
+            status_out = "ACTIVE"
+        elif grain_status_act == "1":
+            status_out = "SPENT"
+        elif grain_status_act == "3":
+            status_out = "DESTROYED"
+        else:
+            status_out = "OTHER"
+
+        # Create the output record
+        out_record = out_record_layout.to_text(
+            serial_out=grain_serial_act,
+            status_out=status_out,
+            type_out=grain_type_act,
+            formula_out=grain_formula_act,
+            qa_out=grain_qa_act,
+            weight_out=grain_weight_act,
+        )
+
+        # Write the output record to the RPTACT file
+        rptact_file.write(out_record)
+        rptact_file.write("\n")
+
+    while inspn_eof_switch != "Y":
+        # Read a record from the INSPN file
+        inspn_record = inspn_file.read(120)
+
+        # Check if the end of the file has been reached
+        if not inspn_record:
+            inspn_eof_switch = "Y"
+            break
+
+        # Parse the INSPN record
+        grain_serial_spn = inspn_record[0:12].decode("utf-8").strip()
+        grain_type_spn = inspn_record[12:22].decode("utf-8").strip()
+        grain_formula_spn = inspn_record[22:37].decode("utf-8").strip()
+        grain_status_spn = inspn_record[37:38].decode("utf-8").strip()
+        grain_qa_spn = inspn_record[38:42].decode("utf-8").strip()
+        grain_quality_spn = inspn_record[42:44].decode("utf-8").strip()
+        grain_weight_spn = inspn_record[44:54].decode("utf-8").strip()
+
+        # Convert the grain status to a string
+        if grain_status_spn == "0":
+            status_out = "ACTIVE"
+        elif grain_status_spn == "1":
+            status_out = "SPENT"
+        elif grain_status_spn == "3":
+            status_out = "DESTROYED"
+        else:
+            status_out = "OTHER"
+
+        # Create the output record
+        out_record = out_record_layout.to_text(
+            serial_out=grain_serial_spn,
+            status_out=status_out,
+            type_out=grain_type_spn,
+            formula

@@ -1,0 +1,264 @@
+```python
+import datetime
+
+# Define the input and output file names
+inall_file = "PINV"
+inact_file = "PACT"
+inspn_file = "PSPN"
+indes_file = "PDES"
+rptall_file = "RPTALL"
+rptact_file = "RPTACT"
+rptspn_file = "RPTSPN"
+rptdes_file = "RPTDES"
+
+# Define the record layouts
+inall_record_layout = [
+    ("GRAIN-SERIAL-ALL", 12, "9"),
+    ("GRAIN-TYPE-ALL", 10, "X"),
+    ("GRAIN-FORMULA-ALL", 15, "X"),
+    ("GRAIN-STATUS-ALL", 1, "X"),
+    ("GRAIN-QA-ALL", 4, "X"),
+    ("GRAIN-QUALITY-ALL", 2, "9"),
+    ("FILLER", 10, "9"),
+    ("FILLER", 10, "9"),
+    ("GRAIN-WEIGHT-ALL", 10, "9"),
+    ("FILLER", 375, "X"),
+]
+inact_record_layout = [
+    ("GRAIN-SERIAL-ACT", 12, "9"),
+    ("GRAIN-TYPE-ACT", 10, "X"),
+    ("GRAIN-FORMULA-ACT", 15, "X"),
+    ("GRAIN-STATUS-ACT", 1, "X"),
+    ("GRAIN-QA-ACT", 4, "X"),
+    ("GRAIN-QUALITY-ACT", 2, "9"),
+    ("FILLER", 10, "9"),
+    ("FILLER", 10, "9"),
+    ("GRAIN-WEIGHT-ACT", 10, "9"),
+    ("FILLER", 375, "X"),
+]
+inspn_record_layout = [
+    ("GRAIN-SERIAL-SPN", 12, "9"),
+    ("GRAIN-TYPE-SPN", 10, "X"),
+    ("GRAIN-FORMULA-SPN", 15, "X"),
+    ("GRAIN-STATUS-SPN", 1, "X"),
+    ("GRAIN-QA-SPN", 4, "X"),
+    ("GRAIN-QUALITY-SPN", 2, "9"),
+    ("FILLER", 10, "9"),
+    ("FILLER", 10, "9"),
+    ("GRAIN-WEIGHT-SPN", 10, "9"),
+    ("FILLER", 375, "X"),
+]
+indes_record_layout = [
+    ("GRAIN-SERIAL-DES", 12, "9"),
+    ("GRAIN-TYPE-DES", 10, "X"),
+    ("GRAIN-FORMULA-DES", 15, "X"),
+    ("GRAIN-STATUS-DES", 1, "X"),
+    ("GRAIN-QA-DES", 4, "X"),
+    ("GRAIN-QUALITY-DES", 2, "9"),
+    ("FILLER", 10, "9"),
+    ("FILLER", 10, "9"),
+    ("GRAIN-WEIGHT-DES", 10, "9"),
+    ("FILLER", 375, "X"),
+]
+
+# Define the output record layouts
+out_record_layout = [
+    ("SERIAL-OUT", 12, "X"),
+    ("FILLER", 2, "X"),
+    ("STATUS-OUT", 10, "X"),
+    ("FILLER", 2, "X"),
+    ("TYPE-OUT", 10, "X"),
+    ("FILLER", 2, "X"),
+    ("FORMULA-OUT", 15, "X"),
+    ("FILLER", 2, "X"),
+    ("QA-OUT", 4, "X"),
+    ("FILLER", 2, "X"),
+    ("WEIGHT-OUT", 10, "X"),
+    ("FILLER", 1, "X"),
+]
+
+# Define the header and date line records
+date_line_record = [
+    ("FILLER", 12, "X"),
+    ("FILLER", 1, "X"),
+    ("DT-YEAR", 4, "9"),
+    ("FILLER", 1, "X"),
+    ("DT-MONTH", 2, "9"),
+    ("FILLER", 1, "X"),
+    ("DT-DAY", 2, "9"),
+]
+header_1_record = [("FILLER", 100, "X")]
+header_all_record = [("FILLER", 100, "X")]
+header_active_record = [("FILLER", 100, "X")]
+header_spent_record = [("FILLER", 100, "X")]
+header_destroyed_record = [("FILLER", 100, "X")]
+header_3_record = [
+    ("FILLER", 14, "X"),
+    ("FILLER", 12, "X"),
+    ("FILLER", 12, "X"),
+    ("FILLER", 17, "X"),
+    ("FILLER", 6, "X"),
+    ("FILLER", 11, "X"),
+]
+header_4_record = [
+    ("FILLER", 12, "X"),
+    ("FILLER", 2, "X"),
+    ("FILLER", 10, "X"),
+    ("FILLER", 2, "X"),
+    ("FILLER", 10, "X"),
+    ("FILLER", 2, "X"),
+    ("FILLER", 15, "X"),
+    ("FILLER", 2, "X"),
+    ("FILLER", 4, "X"),
+    ("FILLER", 2, "X"),
+    ("FILLER", 11, "X"),
+]
+
+# Define the switches
+switches = {
+    "INALL-EOF-SWITCH": "N",
+    "INACT-EOF-SWITCH": "N",
+    "INSPN-EOF-SWITCH": "N",
+    "INDES-EOF-SWITCH": "N",
+}
+
+# Get the current date
+current_date = datetime.datetime.now()
+
+# Open the input and output files
+with open(inall_file, "rb") as inall_file, open(inact_file, "rb") as inact_file, open(
+    inspn_file, "rb"
+) as inspn_file, open(indes_file, "rb") as indes_file, open(
+    rptall_file, "w"
+) as rptall_file, open(rptact_file, "w") as rptact_file, open(
+    rptspn_file, "w"
+) as rptspn_file, open(rptdes_file, "w") as rptdes_file:
+
+    # Write the header records to the output files
+    rptall_file.write(header_1_record[0].tobytes())
+    rptall_file.write(header_all_record[0].tobytes())
+    rptall_file.write(date_line_record[0].tobytes())
+    rptall_file.write(b"\n")
+    rptall_file.write(header_3_record[0].tobytes())
+    rptall_file.write(header_4_record[0].tobytes())
+
+    rptact_file.write(header_1_record[0].tobytes())
+    rptact_file.write(header_active_record[0].tobytes())
+    rptact_file.write(date_line_record[0].tobytes())
+    rptact_file.write(b"\n")
+    rptact_file.write(header_3_record[0].tobytes())
+    rptact_file.write(header_4_record[0].tobytes())
+
+    rptspn_file.write(header_1_record[0].tobytes())
+    rptspn_file.write(header_spent_record[0].tobytes())
+    rptspn_file.write(date_line_record[0].tobytes())
+    rptspn_file.write(b"\n")
+    rptspn_file.write(header_3_record[0].tobytes())
+    rptspn_file.write(header_4_record[0].tobytes())
+
+    rptdes_file.write(header_1_record[0].tobytes())
+    rptdes_file.write(header_destroyed_record[0].tobytes())
+    rptdes_file.write(date_line_record[0].tobytes())
+    rptdes_file.write(b"\n")
+    rptdes_file.write(header_3_record[0].tobytes())
+    rptdes_file.write(header_4_record[0].tobytes())
+
+    # Read the first record from each input file
+    inall_record = inall_file.read(sum(field[1] for field in inall_record_layout))
+    inact_record = inact_file.read(sum(field[1] for field in inact_record_layout))
+    inspn_record = inspn_file.read(sum(field[1] for field in inspn_record_layout))
+    indes_record = indes_file.read(sum(field[1] for field in indes_record_layout))
+
+    # Loop through the input files and write the output records
+    while True:
+        # Get the status of the grain
+        if inall_record[3] == b"0":
+            status = "ACTIVE"
+        elif inall_record[3] == b"1":
+            status = "SPENT"
+        elif inall_record[3] == b"3":
+            status = "DESTROYED"
+        else:
+            status = "OTHER"
+
+        # Create the output record
+        out_record = {
+            "SERIAL-OUT": inall_record[0:12],
+            "STATUS-OUT": status.encode(),
+            "TYPE-OUT": inall_record[12:22],
+            "FORMULA-OUT": inall_record[22:37],
+            "QA-OUT": inall_record[37:41],
+            "WEIGHT-OUT": inall_record[41:51],
+        }
+
+        # Write the output record to the appropriate file
+        rptall_file.write(out_record_layout[0].tobytes(out_record["SERIAL-OUT"]))
+        rptall_file.write(out_record_layout[1].tobytes(out_record["FILLER"]))
+        rptall_file.write(out_record_layout[2].tobytes(out_record["STATUS-OUT"]))
+        rptall_file.write(out_record_layout[3].tobytes(out_record["FILLER"]))
+        rptall_file.write(out_record_layout[4].tobytes(out_record["TYPE-OUT"]))
+        rptall_file.write(out_record_layout[5].tobytes(out_record["FILLER"]))
+        rptall_file.write(out_record_layout[6].tobytes(out_record["FORMULA-OUT"]))
+        rptall_file.write(out_record_layout[7].tobytes(out_record["FILLER"]))
+        rptall_file.write(out_record_layout[8].tobytes(out_record["QA-OUT"]))
+        rptall_file.write(out_record_layout[9].tobytes(out_record["FILLER"]))
+        rptall_file.write(out_record_layout[10].tobytes(out_record["WEIGHT-OUT"]))
+        rptall_file.write(out_record_layout[11].tobytes(out_record["FILLER"]))
+        rptall_file.write(b"\n")
+
+        if status == "ACTIVE":
+            rptact_file.write(out_record_layout[0].tobytes(out_record["SERIAL-OUT"]))
+            rptact_file.write(out_record_layout[1].tobytes(out_record["FILLER"]))
+            rptact_file.write(out_record_layout[2].tobytes(out_record["STATUS-OUT"]))
+            rptact_file.write(out_record_layout[3].tobytes(out_record["FILLER"]))
+            rptact_file.write(out_record_layout[4].tobytes(out_record["TYPE-OUT"]))
+            rptact_file.write(out_record_layout[5].tobytes(out_record["FILLER"]))
+            rptact_file.write(out_record_layout[6].tobytes(out_record["FORMULA-OUT"]))
+            rptact_file.write(out_record_layout[7].tobytes(out_record["FILLER"]))
+            rptact_file.write(out_record_layout[8].tobytes(out_record["QA-OUT"]))
+            rptact_file.write(out_record_layout[9].tobytes(out_record["FILLER"]))
+            rptact_file.write(out_record_layout[10].tobytes(out_record["WEIGHT-OUT"]))
+            rptact_file.write(out_record_layout[11].tobytes(out_record["FILLER"]))
+            rptact_file.write(b"\n")
+        elif status == "SPENT":
+            rptspn_file.write(out_record_layout[0].tobytes(out_record["SERIAL-OUT"]))
+            rptspn_file.write(out_record_layout[1].tobytes(out_record["FILLER"]))
+            rptspn_file.write(out_record_layout[2].tobytes(out_record["STATUS-OUT"]))
+            rptspn_file.write(out_record_layout[3].tobytes(out_record["FILLER"]))
+            rptspn_file.write(out_record_layout[4].tobytes(out_record["TYPE-OUT"]))
+            rptspn_file.write(out_record_layout[5].tobytes(out_record["FILLER"]))
+            rptspn_file.write(out_record_layout[6].tobytes(out_record["FORMULA-OUT"]))
+            rptspn_file.write(out_record_layout[7].tobytes(out_record["FILLER"]))
+            rptspn_file.write(out_record_layout[8].tobytes(out_record["QA-OUT"]))
+            rptspn_file.write(out_record_layout[9].tobytes(out_record["FILLER"]))
+            rptspn_file.write(out_record_layout[10].tobytes(out_record["WEIGHT-OUT"]))
+            rptspn_file.write(out_record_layout[11].tobytes(out_record["FILLER"]))
+            rptspn_file.write(b"\n")
+        elif status == "DESTROYED":
+            rptdes_file.write(out_record_layout[0].tobytes(out_record["SERIAL-OUT"]))
+            rptdes_file.write(out_record_layout[1].tobytes(out_record["FILLER"]))
+            rptdes_file.write(out_record_layout[2].tobytes(out_record["STATUS-OUT"]))
+            rptdes_file.write(out_record_layout[3].tobytes(out_record["FILLER"]))
+            rptdes_file.write(out_record_layout[4].tobytes(out_record["TYPE-OUT"]))
+            rptdes_file.write(out_record_layout[5].tobytes(out_record["FILLER"]))
+            rptdes_file.write(out_record_layout[6].tobytes(out_record["FORMULA-OUT"]))
+            rptdes_file.write(out_record_layout[7].tobytes(out_record["FILLER"]))
+            rptdes_file.write(out_record_layout[8].tobytes(out_record["QA-OUT"]))
+            rptdes_file.write(out_record_layout[9].tobytes(out_record["FILLER"]))
+            rptdes_file.write(out_record_layout[10].tobytes(out_record["WEIGHT-OUT"]))
+            rptdes_file.write(out_record_layout[11].tobytes(out_record["FILLER"]))
+            rptdes_file.write(b"\n")
+
+        # Read the next record from each input file
+        inall_record = inall_file.read(sum(field[1] for field in inall_record_layout))
+        inact_record = inact_file.read(sum(field[1] for field in inact_record_layout))
+        inspn_record = inspn_file.read(sum(field[1] for field in inspn_record_layout))
+        indes_record = indes_file.read(sum(field[1] for field in indes_record_layout))
+
+        # Check if we have reached the end of any of the input files
+        if not inall_record:
+            switches["INALL-EOF-SWITCH"] = "Y"
+        if not inact_record:
+            switches["INACT-EOF-SWITCH"] = "Y"
+        if not inspn_record:
+            switches["INSPN-EOF-SWITCH"] = "Y

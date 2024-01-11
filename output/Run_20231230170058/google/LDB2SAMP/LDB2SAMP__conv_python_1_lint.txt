@@ -1,0 +1,10 @@
+************* Module LDB2SAMP__conv_python_1
+output\Run_20231230170058\google\LDB2SAMP\LDB2SAMP__conv_python_1.py:25:0: C0301: Line too long (148/100) (line-too-long)
+output\Run_20231230170058\google\LDB2SAMP\LDB2SAMP__conv_python_1.py:26:0: C0301: Line too long (148/100) (line-too-long)
+output\Run_20231230170058\google\LDB2SAMP\LDB2SAMP__conv_python_1.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+output\Run_20231230170058\google\LDB2SAMP\LDB2SAMP__conv_python_1.py:1:0: C0103: Module name "LDB2SAMP__conv_python_1" doesn't conform to snake_case naming style (invalid-name)
+output\Run_20231230170058\google\LDB2SAMP\LDB2SAMP__conv_python_1.py:1:0: E0401: Unable to import 'sqlalchemy' (import-error)
+
+------------------------------------------------------------------
+Your code has been rated at 3.08/10 (previous run: 4.74/10, -1.66)
+

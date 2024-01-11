@@ -1,0 +1,43 @@
+Here is the Python code equivalent to the provided COBOL code:
+
+```python
+import datetime
+import pandas as pd
+
+def read_file(file_name, columns, column_lengths):
+    df = pd.read_fwf(file_name, widths=column_lengths, header=None)
+    df.columns = columns
+    return df
+
+def write_report(df, file_name, header):
+    with open(file_name, 'w') as file:
+        file.write(header)
+        df.to_string(file, index=False)
+
+def main():
+    columns = ['grain_serial', 'grain_type', 'grain_formula', 'grain_status', 'grain_qa', 'grain_quality', 'filler1', 'filler2', 'grain_weight', 'filler3']
+    column_lengths = [12, 10, 15, 1, 4, 2, 10, 10, 10, 375]
+
+    df_all = read_file('PINV', columns, column_lengths)
+    df_act = read_file('PACT', columns, column_lengths)
+    df_spn = read_file('PSPN', columns, column_lengths)
+    df_des = read_file('PDES', columns, column_lengths)
+
+    header = f"REPORT DATE: {datetime.datetime.now().strftime('%Y/%m/%d')}\n"
+    header += "SERIAL  STATUS  TYPE  FORMULA  QA  WEIGHT\n"
+    header += "------------  ----------  ----------  ---------------  ----  -----------\n"
+
+    write_report(df_all, 'RPTALL', header + 'HAYNIE RESEARCH & DEVELOPMENT\nPROPELLANT GRAIN INVENTORY REPORT - ALL\n')
+    write_report(df_act, 'RPTACT', header + 'HAYNIE RESEARCH & DEVELOPMENT\nPROPELLANT GRAIN INVENTORY REPORT - ACTIVE\n')
+    write_report(df_spn, 'RPTSPN', header + 'HAYNIE RESEARCH & DEVELOPMENT\nPROPELLANT GRAIN INVENTORY REPORT - SPENT\n')
+    write_report(df_des, 'RPTDES', header + 'HAYNIE RESEARCH & DEVELOPMENT\nPROPELLANT GRAIN INVENTORY REPORT - DESTROYED\n')
+
+if __name__ == "__main__":
+    main()
+```
+
+This Python script uses the pandas library to read the fixed width files and write the reports. It defines a function `read_file` to read the fixed width files and a function `write_report` to write the reports. The `main` function reads the input files, prepares the header for the reports, and writes the reports. 
+
+Please replace 'PINV', 'PACT', 'PSPN', 'PDES' with the actual paths of your input files and 'RPTALL', 'RPTACT', 'RPTSPN', 'RPTDES' with the actual paths where you want to save the output files. 
+
+You can run this script by saving it to a file and running it with Python. For example, if you save it to a file named `script.py`, you can run it with the command `python script.py`.

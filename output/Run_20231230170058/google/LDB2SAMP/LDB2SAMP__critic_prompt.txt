@@ -1,0 +1,219 @@
+
+        Critic. You are a helpful assistant highly skilled in evaluating the quality of a given python code by providing a score from 1 (bad) - 10 (good) while providing clear rationale. YOU MUST CONSIDER CODING BEST PRACTICES for each evaluation. Specifically, you can carefully evaluate the code across the following dimensions
+- bugs (bugs):  are there bugs, logic errors, syntax error or typos? Are there any reasons why the code may fail to compile? How should it be fixed? If ANY bug exists, the bug score MUST be less than 5.
+- Goal compliance (compliance): how well the source Cobol code was converted?
+
+YOU MUST PROVIDE A SCORE for each of the above dimensions.
+{bugs: 0, transformation: 0, compliance: 0, aesthetics: 0}
+Do not suggest code. 
+Finally, based on the critique above, suggest a concrete list of actions that the coder should take to improve the code.    
+
+        Source Cobol code can be found between the delimiters === COBOL START === and === COBOL END ===.
+Converted Python code can be found between the delimiters === PYTHON START === and === PYTHON END ===.
+
+=== COBOL START ===
+ IDENTIFICATION DIVISION.
+ PROGRAM-ID. LDB2SAMP.
+
+ DATA DIVISION.
+
+ WORKING-STORAGE SECTION.
+
+ EXEC SQL INCLUDE SQLCA END-EXEC.
+
+ 01 EMPLOYEE.
+   05 EMPNO PIC X(6).
+   05 FIRSTNME.
+     49 LEN PIC S9(4) COMP-5.
+     49 DAT PIC X(12).
+   05 MIDINIT PIC X(1).
+   05 LASTNAME.
+     49 LEN PIC S9(4) COMP-5.
+     49 DAT PIC X(15).
+   05 WORKDEPT PIC X(3).
+   05 PHONENO PIC X(4).
+   05 HIREDATE PIC X(10).
+   05 JOB PIC X(8).
+   05 EDLEVEL PIC S9(4) COMP-5.
+   05 SEX PIC X(1).
+   05 BIRTHDATE PIC X(10).
+   05 SALARY PIC S9(7)V9(2) COMP-3.
+   05 BONUS PIC S9(7)V9(2) COMP-3.
+   05 COMM PIC S9(7)V9(2) COMP-3.
+
+ 01 VARIABLES.
+     02 RECORDCOUNT        PIC S9(8) USAGE COMP-3.
+     02 DISPLAYRC          PIC S9(4) USAGE DISPLAY.
+     02 OUT                PIC X(200).
+     02 NEXTEMP            PIC X(6).
+     02 NEXTEMPNO          PIC 9(6).
+     02 FIRSTNMEP          PIC X(12).
+     02 LASTNAMEP          PIC X(15).
+
+
+ LINKAGE SECTION.
+
+ PROCEDURE DIVISION.
+
+     MOVE LOW-VALUES TO VARIABLES.
+
+     EXEC SQL SELECT COUNT (*)
+                     INTO :RECORDCOUNT
+                     FROM EMPLOYEE
+                     END-EXEC.
+
+     IF SQLCODE = 0 THEN
+         MOVE RECORDCOUNT TO DISPLAYRC
+         MOVE "THE NUMBER OF EMPLOYEES IN THE DATABASE IS " TO OUT
+         MOVE DISPLAYRC TO OUT(44:4)
+     ELSE IF SQLCODE = 100 THEN
+         MOVE "NO EMPLOYEES FOUND IN DATABASE" TO OUT
+     ELSE
+         MOVE "SQL ERROR " TO OUT
+         MOVE SQLCODE TO OUT(11:10)
+     END-IF.
+
+     DISPLAY OUT.
+
+     IF SQLCODE = 0 THEN
+         EXEC SQL SELECT MAX (EMPNO)
+                         INTO :NEXTEMP
+                         FROM EMPLOYEE
+                         END-EXEC
+
+         MOVE NEXTEMP TO NEXTEMPNO
+
+         COMPUTE NEXTEMPNO = NEXTEMPNO + 10
+
+         MOVE NEXTEMPNO TO EMPNO
+         MOVE "FRANK" TO FIRSTNMEP
+         MOVE "JONES" TO LASTNAMEP
+         MOVE "Y" TO MIDINIT
+         MOVE "A00" TO WORKDEPT
+         MOVE "1234" TO PHONENO
+         MOVE "04-30-1979" TO HIREDATE
+         MOVE "Clerk" TO JOB
+         MOVE 15 TO EDLEVEL
+         MOVE "M" TO SEX
+         MOVE "05-30-1954" TO BIRTHDATE
+         MOVE "36170" TO SALARY
+         MOVE "400" TO BONUS
+         MOVE "2387" TO COMM
+
+         EXEC SQL INSERT INTO EMPLOYEE
+                         VALUES(:EMPNO,
+                                :FIRSTNMEP,
+                                :MIDINIT,
+                                :LASTNAMEP,
+                                :WORKDEPT,
+                                :PHONENO,
+                                :HIREDATE,
+                                :JOB,
+                                :EDLEVEL,
+                                :SEX,
+                                :BIRTHDATE,
+                                :SALARY,
+                                :BONUS,
+                                :COMM)
+                         END-EXEC
+
+         IF SQLCODE = 0 THEN
+            EXEC SQL SELECT *
+                     INTO :EMPNO,
+                          :FIRSTNME,
+                          :MIDINIT,
+                          :LASTNAME,
+                          :WORKDEPT,
+                          :PHONENO,
+                          :HIREDATE,
+                          :JOB,
+                          :EDLEVEL,
+                          :SEX,
+                          :BIRTHDATE,
+                          :SALARY,
+                          :BONUS,
+                          :COMM
+                     FROM EMPLOYEE
+                     WHERE EMPNO = :EMPNO
+                     END-EXEC
+
+            EXEC SQL COMMIT END-EXEC
+
+            MOVE FIRSTNMEP TO OUT
+            MOVE LASTNAMEP TO OUT(14:15)
+            DISPLAY OUT
+            DISPLAY "ADDED TO THE DATABASE"
+
+         ELSE
+            MOVE "SQL ERROR" TO OUT
+            DISPLAY OUT
+         END-IF
+
+     END-IF.
+
+
+     GOBACK.
+=== COBOL END ===
+
+=== PYTHON START ===
+import sqlalchemy
+
+# Create a connection to the Oracle database
+engine = sqlalchemy.create_engine('oracle://username:password@host:port/database')
+
+# Create a session
+session = engine.connect()
+
+# Get the number of employees in the database
+record_count = session.execute("SELECT COUNT(*) FROM EMPLOYEE").fetchone()[0]
+
+# Display the number of employees
+print("THE NUMBER OF EMPLOYEES IN THE DATABASE IS", record_count)
+
+# If there are no employees, display a message
+if record_count == 0:
+    print("NO EMPLOYEES FOUND IN DATABASE")
+
+# Otherwise, get the next employee number
+else:
+    next_emp_no = session.execute("SELECT MAX(EMPNO) FROM EMPLOYEE").fetchone()[0] + 10
+
+    # Insert a new employee into the database
+    session.execute(
+        "INSERT INTO EMPLOYEE (EMPNO, FIRSTNME, MIDINIT, LASTNAME, WORKDEPT, PHONENO, HIREDATE, JOB, EDLEVEL, SEX, BIRTHDATE, SALARY, BONUS, COMM) "
+        "VALUES (:EMPNO, :FIRSTNME, :MIDINIT, :LASTNAME, :WORKDEPT, :PHONENO, :HIREDATE, :JOB, :EDLEVEL, :SEX, :BIRTHDATE, :SALARY, :BONUS, :COMM)",
+        {
+            "EMPNO": next_emp_no,
+            "FIRSTNME": "FRANK",
+            "MIDINIT": "Y",
+            "LASTNAME": "JONES",
+            "WORKDEPT": "A00",
+            "PHONENO": "1234",
+            "HIREDATE": "04-30-1979",
+            "JOB": "Clerk",
+            "EDLEVEL": 15,
+            "SEX": "M",
+            "BIRTHDATE": "05-30-1954",
+            "SALARY": 36170,
+            "BONUS": 400,
+            "COMM": 2387,
+        }
+    )
+
+    # Commit the changes
+    session.commit()
+
+    # Get the newly inserted employee's data
+    employee = session.execute(
+        "SELECT * FROM EMPLOYEE WHERE EMPNO = :EMPNO",
+        {"EMPNO": next_emp_no}
+    ).fetchone()
+
+    # Display the newly inserted employee's data
+    print(employee.FIRSTNME, employee.LASTNAME, "ADDED TO THE DATABASE")
+
+# Close the session
+session.close()
+
+=== PYTHON END ===
+        

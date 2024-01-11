@@ -1,0 +1,12 @@
+************* Module PINVRPT__conv_python_1
+output\OpenAI_20231230160808\PINVRPT\PINVRPT__conv_python_1.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+output\OpenAI_20231230160808\PINVRPT\PINVRPT__conv_python_1.py:1:0: C0103: Module name "PINVRPT__conv_python_1" doesn't conform to snake_case naming style (invalid-name)
+output\OpenAI_20231230160808\PINVRPT\PINVRPT__conv_python_1.py:2:0: E0401: Unable to import 'pandas' (import-error)
+output\OpenAI_20231230160808\PINVRPT\PINVRPT__conv_python_1.py:5:0: C0116: Missing function or method docstring (missing-function-docstring)
+output\OpenAI_20231230160808\PINVRPT\PINVRPT__conv_python_1.py:9:0: C0116: Missing function or method docstring (missing-function-docstring)
+output\OpenAI_20231230160808\PINVRPT\PINVRPT__conv_python_1.py:10:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+output\OpenAI_20231230160808\PINVRPT\PINVRPT__conv_python_1.py:15:0: C0116: Missing function or method docstring (missing-function-docstring)
+
+------------------------------------------------------------------
+Your code has been rated at 4.21/10 (previous run: 6.34/10, -2.13)
+

@@ -1,0 +1,12 @@
+************* Module LDB2SAMP__conv_python_1
+output\Run_20231230180831\google\LDB2SAMP\LDB2SAMP__conv_python_1.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+output\Run_20231230180831\google\LDB2SAMP\LDB2SAMP__conv_python_1.py:1:0: C0103: Module name "LDB2SAMP__conv_python_1" doesn't conform to snake_case naming style (invalid-name)
+output\Run_20231230180831\google\LDB2SAMP\LDB2SAMP__conv_python_1.py:1:0: E0401: Unable to import 'sqlalchemy' (import-error)
+output\Run_20231230180831\google\LDB2SAMP\LDB2SAMP__conv_python_1.py:2:0: E0401: Unable to import 'sqlalchemy' (import-error)
+output\Run_20231230180831\google\LDB2SAMP\LDB2SAMP__conv_python_1.py:3:0: E0401: Unable to import 'cx_Oracle' (import-error)
+output\Run_20231230180831\google\LDB2SAMP\LDB2SAMP__conv_python_1.py:1:0: W0611: Unused import sqlalchemy (unused-import)
+output\Run_20231230180831\google\LDB2SAMP\LDB2SAMP__conv_python_1.py:3:0: W0611: Unused import cx_Oracle (unused-import)
+
+------------------------------------------------------------------
+Your code has been rated at 0.00/10 (previous run: 3.91/10, -3.91)
+

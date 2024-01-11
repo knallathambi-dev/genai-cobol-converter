@@ -1,0 +1,151 @@
+
+        You are a helpful AI assistant. You are an expert in documenting COBOL code.
+For the given COBOL code explain the code in detail. Also do not omit any code for brevity. We want the whole code to be documentated.
+
+        The Cobol code can be found between the delimiters === COBOL START === and === COBOL END ===.
+Make sure that the documentation is formatted using markdown syntax.
+
+=== COBOL START ===
+ IDENTIFICATION DIVISION.
+ PROGRAM-ID. LDB2SAMP.
+
+ DATA DIVISION.
+
+ WORKING-STORAGE SECTION.
+
+ EXEC SQL INCLUDE SQLCA END-EXEC.
+
+ 01 EMPLOYEE.
+   05 EMPNO PIC X(6).
+   05 FIRSTNME.
+     49 LEN PIC S9(4) COMP-5.
+     49 DAT PIC X(12).
+   05 MIDINIT PIC X(1).
+   05 LASTNAME.
+     49 LEN PIC S9(4) COMP-5.
+     49 DAT PIC X(15).
+   05 WORKDEPT PIC X(3).
+   05 PHONENO PIC X(4).
+   05 HIREDATE PIC X(10).
+   05 JOB PIC X(8).
+   05 EDLEVEL PIC S9(4) COMP-5.
+   05 SEX PIC X(1).
+   05 BIRTHDATE PIC X(10).
+   05 SALARY PIC S9(7)V9(2) COMP-3.
+   05 BONUS PIC S9(7)V9(2) COMP-3.
+   05 COMM PIC S9(7)V9(2) COMP-3.
+
+ 01 VARIABLES.
+     02 RECORDCOUNT        PIC S9(8) USAGE COMP-3.
+     02 DISPLAYRC          PIC S9(4) USAGE DISPLAY.
+     02 OUT                PIC X(200).
+     02 NEXTEMP            PIC X(6).
+     02 NEXTEMPNO          PIC 9(6).
+     02 FIRSTNMEP          PIC X(12).
+     02 LASTNAMEP          PIC X(15).
+
+
+ LINKAGE SECTION.
+
+ PROCEDURE DIVISION.
+
+     MOVE LOW-VALUES TO VARIABLES.
+
+     EXEC SQL SELECT COUNT (*)
+                     INTO :RECORDCOUNT
+                     FROM EMPLOYEE
+                     END-EXEC.
+
+     IF SQLCODE = 0 THEN
+         MOVE RECORDCOUNT TO DISPLAYRC
+         MOVE "THE NUMBER OF EMPLOYEES IN THE DATABASE IS " TO OUT
+         MOVE DISPLAYRC TO OUT(44:4)
+     ELSE IF SQLCODE = 100 THEN
+         MOVE "NO EMPLOYEES FOUND IN DATABASE" TO OUT
+     ELSE
+         MOVE "SQL ERROR " TO OUT
+         MOVE SQLCODE TO OUT(11:10)
+     END-IF.
+
+     DISPLAY OUT.
+
+     IF SQLCODE = 0 THEN
+         EXEC SQL SELECT MAX (EMPNO)
+                         INTO :NEXTEMP
+                         FROM EMPLOYEE
+                         END-EXEC
+
+         MOVE NEXTEMP TO NEXTEMPNO
+
+         COMPUTE NEXTEMPNO = NEXTEMPNO + 10
+
+         MOVE NEXTEMPNO TO EMPNO
+         MOVE "FRANK" TO FIRSTNMEP
+         MOVE "JONES" TO LASTNAMEP
+         MOVE "Y" TO MIDINIT
+         MOVE "A00" TO WORKDEPT
+         MOVE "1234" TO PHONENO
+         MOVE "04-30-1979" TO HIREDATE
+         MOVE "Clerk" TO JOB
+         MOVE 15 TO EDLEVEL
+         MOVE "M" TO SEX
+         MOVE "05-30-1954" TO BIRTHDATE
+         MOVE "36170" TO SALARY
+         MOVE "400" TO BONUS
+         MOVE "2387" TO COMM
+
+         EXEC SQL INSERT INTO EMPLOYEE
+                         VALUES(:EMPNO,
+                                :FIRSTNMEP,
+                                :MIDINIT,
+                                :LASTNAMEP,
+                                :WORKDEPT,
+                                :PHONENO,
+                                :HIREDATE,
+                                :JOB,
+                                :EDLEVEL,
+                                :SEX,
+                                :BIRTHDATE,
+                                :SALARY,
+                                :BONUS,
+                                :COMM)
+                         END-EXEC
+
+         IF SQLCODE = 0 THEN
+            EXEC SQL SELECT *
+                     INTO :EMPNO,
+                          :FIRSTNME,
+                          :MIDINIT,
+                          :LASTNAME,
+                          :WORKDEPT,
+                          :PHONENO,
+                          :HIREDATE,
+                          :JOB,
+                          :EDLEVEL,
+                          :SEX,
+                          :BIRTHDATE,
+                          :SALARY,
+                          :BONUS,
+                          :COMM
+                     FROM EMPLOYEE
+                     WHERE EMPNO = :EMPNO
+                     END-EXEC
+
+            EXEC SQL COMMIT END-EXEC
+
+            MOVE FIRSTNMEP TO OUT
+            MOVE LASTNAMEP TO OUT(14:15)
+            DISPLAY OUT
+            DISPLAY "ADDED TO THE DATABASE"
+
+         ELSE
+            MOVE "SQL ERROR" TO OUT
+            DISPLAY OUT
+         END-IF
+
+     END-IF.
+
+
+     GOBACK.
+=== COBOL END ===
+        

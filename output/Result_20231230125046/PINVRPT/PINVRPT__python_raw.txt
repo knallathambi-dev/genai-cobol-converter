@@ -1,0 +1,32 @@
+Here is the Python code equivalent to the COBOL code you provided:
+
+```python
+import datetime
+import pandas as pd
+
+def read_file(file_name, columns, column_widths):
+    return pd.read_fwf(file_name, widths=column_widths, names=columns, header=None)
+
+def write_file(df, file_name, header):
+    with open(file_name, 'w') as f:
+        f.write(header)
+        df.to_string(f, index=False)
+
+def main():
+    current_date = datetime.datetime.now()
+    date_line = 'REPORT DATE: ' + current_date.strftime('%Y/%m/%d')
+
+    columns = ['SERIAL', 'STATUS', 'TYPE', 'FORMULA', 'QA', 'WEIGHT']
+    column_widths = [12, 1, 10, 15, 4, 10, 10, 10, 375]
+
+    for status, file_prefix in enumerate(['ALL', 'ACTIVE', 'SPENT', 'DESTROYED']):
+        df = read_file(f'IN{file_prefix}', columns, column_widths)
+        df['STATUS'] = df['STATUS'].map({0: 'ACTIVE', 1: 'SPENT', 3: 'DESTROYED'}).fillna('OTHER')
+        header = f'HAYNIE RESEARCH & DEVELOPMENT\nPROPELLANT GRAIN INVENTORY REPORT - {file_prefix}\n{date_line}\n\n' + ' '.join(columns)
+        write_file(df, f'RPT{file_prefix}', header)
+
+if __name__ == "__main__":
+    main()
+```
+
+This Python script uses the pandas library to read and write fixed width files. It reads the input files, maps the status codes to their corresponding status strings, and writes the output files with the appropriate headers. It also generates the current date string in the same format as the COBOL code. The main function loops over the four statuses and processes the files for each status.

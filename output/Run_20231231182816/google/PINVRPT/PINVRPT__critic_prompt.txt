@@ -1,0 +1,625 @@
+
+        Critic. You are a helpful assistant highly skilled in evaluating the quality of a given python code by providing a score from 1 (bad) - 10 (good) while providing clear rationale. YOU MUST CONSIDER CODING BEST PRACTICES for each evaluation. Specifically, you can carefully evaluate the code across the following dimensions
+- bugs (bugs):  are there bugs, logic errors, syntax error or typos? Are there any reasons why the code may fail to compile? How should it be fixed? If ANY bug exists, the bug score MUST be less than 5.
+- Goal compliance (compliance): how well the source Cobol code was converted?
+
+YOU MUST PROVIDE A SCORE for each of the above dimensions.
+{bugs: 0, transformation: 0, compliance: 0, aesthetics: 0}
+Do not suggest code. 
+Finally, based on the critique above, suggest a concrete list of actions that the coder should take to improve the code.    
+
+        Source Cobol code can be found between the delimiters === COBOL START === and === COBOL END ===.
+Converted Python code can be found between the delimiters === PYTHON START === and === PYTHON END ===.
+
+=== COBOL START ===
+ IDENTIFICATION DIVISION.
+ PROGRAM-ID.  PINVRPT.
+ ENVIRONMENT DIVISION.
+ INPUT-OUTPUT SECTION.
+ FILE-CONTROL.
+     SELECT INALL ASSIGN TO
+     '/home/knallathambi/workspace/cobol_apps/tmp/INALL.dat'
+     ORGANIZATION LINE SEQUENTIAL.
+     SELECT INACT ASSIGN TO
+     '/home/knallathambi/workspace/cobol_apps/tmp/INACT.dat'
+     ORGANIZATION LINE SEQUENTIAL.
+     SELECT INSPN ASSIGN TO
+     '/home/knallathambi/workspace/cobol_apps/tmp/INSPN.dat'
+     ORGANIZATION LINE SEQUENTIAL.
+     SELECT INDES ASSIGN TO
+     '/home/knallathambi/workspace/cobol_apps/tmp/INDES.dat'
+     ORGANIZATION LINE SEQUENTIAL.
+     SELECT RPTALL ASSIGN TO
+     '/home/knallathambi/workspace/cobol_apps/tmp/RPTALL.dat'
+     ORGANIZATION LINE SEQUENTIAL.
+     SELECT RPTACT ASSIGN TO
+     '/home/knallathambi/workspace/cobol_apps/tmp/RPTACT.dat'
+     ORGANIZATION LINE SEQUENTIAL.
+     SELECT RPTSPN ASSIGN TO
+     '/home/knallathambi/workspace/cobol_apps/tmp/RPTSPN.dat'
+     ORGANIZATION LINE SEQUENTIAL.
+     SELECT RPTDES ASSIGN TO
+     '/home/knallathambi/workspace/cobol_apps/tmp/RPTDES.dat'
+     ORGANIZATION LINE SEQUENTIAL.
+ DATA DIVISION.
+ FILE SECTION.
+ FD INALL.
+ 01  INALL-RECORD-ALL.
+     05  GRAIN-SERIAL-ALL             PIC 9(12).
+     05  GRAIN-TYPE-ALL               PIC X(10).
+     05  GRAIN-FORMULA-ALL            PIC X(15).
+     05  GRAIN-STATUS-ALL             PIC X(1).
+     05  GRAIN-QA-ALL                 PIC X(4).
+     05  GRAIN-QUALITY-ALL            PIC 9(2).
+     05  FILLER                       PIC 9(10).
+     05  FILLER                       PIC 9(10).
+     05  GRAIN-WEIGHT-ALL             PIC 9(10).
+     05  FILLER                       PIC X(375).
+ FD INACT.
+ 01  INALL-RECORD-ACT.
+     05  GRAIN-SERIAL-ACT             PIC 9(12).
+     05  GRAIN-TYPE-ACT               PIC X(10).
+     05  GRAIN-FORMULA-ACT            PIC X(15).
+     05  GRAIN-STATUS-ACT             PIC X(1).
+     05  GRAIN-QA-ACT                 PIC X(4).
+     05  GRAIN-QUALITY-ACT            PIC 9(2).
+     05  FILLER                       PIC 9(10).
+     05  FILLER                       PIC 9(10).
+     05  GRAIN-WEIGHT-ACT             PIC 9(10).
+     05  FILLER                       PIC X(375).
+ FD INSPN.
+ 01  INALL-RECORD-SPN.
+     05  GRAIN-SERIAL-SPN             PIC 9(12).
+     05  GRAIN-TYPE-SPN               PIC X(10).
+     05  GRAIN-FORMULA-SPN            PIC X(15).
+     05  GRAIN-STATUS-SPN             PIC X(1).
+     05  GRAIN-QA-SPN                 PIC X(4).
+     05  GRAIN-QUALITY-SPN            PIC 9(2).
+     05  FILLER                       PIC 9(10).
+     05  FILLER                       PIC 9(10).
+     05  GRAIN-WEIGHT-SPN             PIC 9(10).
+     05  FILLER                       PIC X(375).
+ FD INDES.
+ 01  INALL-RECORD-DES.
+     05  GRAIN-SERIAL-DES             PIC 9(12).
+     05  GRAIN-TYPE-DES               PIC X(10).
+     05  GRAIN-FORMULA-DES            PIC X(15).
+     05  GRAIN-STATUS-DES             PIC X(1).
+     05  GRAIN-QA-DES                 PIC X(4).
+     05  GRAIN-QUALITY-DES            PIC 9(2).
+     05  FILLER                       PIC 9(10).
+     05  FILLER                       PIC 9(10).
+     05  GRAIN-WEIGHT-DES             PIC 9(10).
+     05  FILLER                       PIC X(375).
+ FD RPTALL.
+ 01  OUTFILE-ALL                 PIC X(200).
+ FD RPTACT.
+ 01  OUTFILE-ACTIVE              PIC X(200).
+ FD RPTSPN.
+ 01  OUTFILE-SPENT               PIC X(200).
+ FD RPTDES.
+ 01  OUTFILE-DESTROYED           PIC X(200).
+ WORKING-STORAGE SECTION.
+ 01  WS-CURRENT-DATE.
+     05  WS-YEAR                 PIC 9(4).
+     05  WS-MONTH                PIC 9(2).
+     05  WS-DAY                  PIC 9(2).
+     05  WS-HOURS                PIC 9(2).
+     05  WS-MINUTES              PIC 9(2).
+     05  WS-SECONDS              PIC 9(2).
+     05  WS-HUND-SECOND          PIC 9(2).
+     05  WS-GMT                  PIC X(5).
+ 01  OUT-RECORD.
+     05  SERIAL-OUT              PIC X(12).
+     05  FILLER                  PIC X(2)
+         VALUE  SPACES.
+     05  STATUS-OUT              PIC X(10).
+     05  FILLER                  PIC X(2)
+         VALUE SPACES.
+     05  TYPE-OUT                PIC X(10).
+     05  FILLER                  PIC X(2)
+         VALUE  SPACES.
+     05  FORMULA-OUT             PIC X(15).
+     05  FILLER                  PIC X(2)
+         VALUE SPACES.
+     05  QA-OUT                  PIC X(4).
+     05  FILLER                  PIC X(2)
+         VALUE SPACES.
+     05  WEIGHT-OUT              PIC X(10).
+     05  FILLER                  PIC X
+         VALUE 'G'.
+ 01  DATE-LINE.
+     05  FILLER                  PIC X(12)
+         VALUE 'REPORT DATE:'.
+     05  FILLER                  PIC X(1)
+         VALUE SPACES.
+     05  DT-YEAR                 PIC 9(4).
+     05  FILLER                  PIC X
+         VALUE '/'.
+     05  DT-MONTH                PIC 9(2).
+     05  FILLER                  PIC X
+         VALUE '/'.
+     05  DT-DAY                  PIC 9(2).
+ 01  HEADER-1.
+     05  FILLER                  PIC X(100)
+         VALUE  'HAYNIE RESEARCH & DEVELOPMENT'.
+ 01  HEADER-ALL.
+     05  FILLER                  PIC X(100)
+         VALUE  'PROPELLANT GRAIN INVENTORY REPORT - ALL'.
+ 01  HEADER-ACTIVE.
+     05  FILLER                  PIC X(100)
+         VALUE  'PROPELLANT GRAIN INVENTORY REPORT - ACTIVE'.
+ 01  HEADER-SPENT.
+     05  FILLER                  PIC X(100)
+         VALUE  'PROPELLANT GRAIN INVENTORY REPORT - SPENT'.
+ 01  HEADER-DESTROYED.
+     05  FILLER                  PIC X(100)
+         VALUE  'PROPELLANT GRAIN INVENTORY REPORT - DESTROYED'.
+ 01  HEADER-3.
+     05  FILLER                  PIC X(14)
+         VALUE  'SERIAL'.
+     05  FILLER                  PIC X(12)
+         VALUE  'STATUS'.
+     05  FILLER                  PIC X(12)
+         VALUE  'TYPE'.
+     05  FILLER                  PIC X(17)
+         VALUE  'FORMULA'.
+     05  FILLER                  PIC X(6)
+         VALUE  'QA'.
+     05  FILLER                  PIC X(11)
+         VALUE  'WEIGHT'.
+ 01  HEADER-4.
+     05  FILLER                  PIC X(12)
+         VALUE  '------------'.
+     05  FILLER                  PIC X(2)
+         VALUE SPACES.
+     05  FILLER                  PIC X(10)
+         VALUE  '----------'.
+     05  FILLER                  PIC X(2)
+         VALUE SPACES.
+     05  FILLER                  PIC X(10)
+         VALUE '----------'.
+     05  FILLER                  PIC X(2)
+         VALUE SPACES.
+     05  FILLER                  PIC X(15)
+         VALUE '---------------'.
+     05  FILLER                  PIC X(2)
+         VALUE SPACES.
+     05  FILLER                  PIC X(4)
+         VALUE '----'.
+     05  FILLER                  PIC X(2)
+         VALUE SPACES.
+     05  FILLER                  PIC X(11)
+         VALUE '-----------'.
+ 01  SWITCHES.
+     05  INALL-EOF-SWITCH         PIC X(1) VALUE 'N'.
+     05  INACT-EOF-SWITCH         PIC X(1) VALUE 'N'.
+     05  INSPN-EOF-SWITCH         PIC X(1) VALUE 'N'.
+     05  INDES-EOF-SWITCH         PIC X(1) VALUE 'N'.
+
+ 01  WS-COUNTERS.
+     05  WS-INACT-COUNT           PIC S9(4) COMP VALUE 0.
+     05  WS-INALL-COUNT           PIC S9(4) COMP VALUE 0.
+     05  WS-INSPN-COUNT           PIC S9(4) COMP VALUE 0.
+     05  WS-INDES-COUNT           PIC S9(4) COMP VALUE 0.
+     05  WS-RPTACT-COUNT           PIC S9(4) COMP VALUE 0.
+     05  WS-RPTALL-COUNT           PIC S9(4) COMP VALUE 0.
+     05  WS-RPTSPN-COUNT           PIC S9(4) COMP VALUE 0.
+     05  WS-RPTDES-COUNT           PIC S9(4) COMP VALUE 0.
+ PROCEDURE DIVISION.
+ MAIN-PROGRAM.
+     MOVE FUNCTION CURRENT-DATE TO WS-CURRENT-DATE.
+     MOVE WS-YEAR TO DT-YEAR.
+     MOVE WS-MONTH TO DT-MONTH.
+     MOVE WS-DAY TO DT-DAY.
+     PERFORM REPORT-ALL.
+     PERFORM REPORT-ACTIVE.
+     PERFORM REPORT-SPENT.
+     PERFORM REPORT-DESTROYED.
+     PERFORM DISPLAY-STATS.
+     STOP RUN.
+ REPORT-ALL.
+     OPEN INPUT INALL
+          OUTPUT RPTALL.
+     READ INALL
+         AT END
+             MOVE 'Y' TO INALL-EOF-SWITCH
+     END-READ.
+     MOVE HEADER-1 TO OUTFILE-ALL.
+     WRITE OUTFILE-ALL.
+     MOVE HEADER-ALL TO OUTFILE-ALL.
+     WRITE OUTFILE-ALL.
+     MOVE DATE-LINE TO OUTFILE-ALL.
+     WRITE OUTFILE-ALL.
+     MOVE SPACES TO OUTFILE-ALL.
+     WRITE OUTFILE-ALL.
+     MOVE HEADER-3 TO OUTFILE-ALL.
+     WRITE OUTFILE-ALL.
+     MOVE HEADER-4 TO OUTFILE-ALL.
+     WRITE OUTFILE-ALL.
+     PERFORM ALL-LOOP
+         UNTIL INALL-EOF-SWITCH = 'Y'.
+     CLOSE INALL
+           RPTALL.
+ REPORT-ACTIVE.
+     OPEN INPUT INACT
+          OUTPUT RPTACT.
+     READ INACT
+         AT END
+             MOVE 'Y' TO INACT-EOF-SWITCH
+     END-READ.
+     MOVE HEADER-1 TO OUTFILE-ACTIVE.
+     WRITE OUTFILE-ACTIVE.
+     MOVE HEADER-ACTIVE TO OUTFILE-ACTIVE.
+     WRITE OUTFILE-ACTIVE.
+     MOVE DATE-LINE TO OUTFILE-ACTIVE.
+     WRITE OUTFILE-ACTIVE.
+     MOVE SPACES TO OUTFILE-ACTIVE.
+     WRITE OUTFILE-ACTIVE.
+     MOVE HEADER-3 TO OUTFILE-ACTIVE.
+     WRITE OUTFILE-ACTIVE.
+     MOVE HEADER-4 TO OUTFILE-ACTIVE.
+     WRITE OUTFILE-ACTIVE.
+     PERFORM ACTIVE-LOOP
+         UNTIL INACT-EOF-SWITCH = 'Y'.
+     CLOSE INACT
+           RPTACT.
+ REPORT-SPENT.
+     OPEN INPUT INSPN
+          OUTPUT RPTSPN.
+     READ INSPN
+         AT END
+             MOVE 'Y' TO INSPN-EOF-SWITCH
+     END-READ.
+     MOVE HEADER-1 TO OUTFILE-SPENT.
+     WRITE OUTFILE-SPENT.
+     MOVE HEADER-SPENT TO OUTFILE-SPENT.
+     WRITE OUTFILE-SPENT.
+     MOVE DATE-LINE TO OUTFILE-SPENT.
+     WRITE OUTFILE-SPENT.
+     MOVE SPACES TO OUTFILE-SPENT.
+     WRITE OUTFILE-SPENT.
+     MOVE HEADER-3 TO OUTFILE-SPENT.
+     WRITE OUTFILE-SPENT.
+     MOVE HEADER-4 TO OUTFILE-SPENT.
+     WRITE OUTFILE-SPENT.
+     PERFORM SPENT-LOOP
+         UNTIL INSPN-EOF-SWITCH = 'Y'.
+     CLOSE INSPN
+           RPTSPN.
+ REPORT-DESTROYED.
+     OPEN INPUT INDES
+          OUTPUT RPTDES.
+     READ INDES
+         AT END
+             MOVE 'Y' TO INDES-EOF-SWITCH
+     END-READ.
+     MOVE HEADER-1 TO OUTFILE-DESTROYED.
+     WRITE OUTFILE-DESTROYED.
+     MOVE HEADER-DESTROYED TO OUTFILE-DESTROYED.
+     WRITE OUTFILE-DESTROYED.
+     MOVE DATE-LINE TO OUTFILE-DESTROYED.
+     WRITE OUTFILE-DESTROYED.
+     MOVE SPACES TO OUTFILE-DESTROYED.
+     WRITE OUTFILE-DESTROYED.
+     MOVE HEADER-3 TO OUTFILE-DESTROYED.
+     WRITE OUTFILE-DESTROYED.
+     MOVE HEADER-4 TO OUTFILE-DESTROYED.
+     WRITE OUTFILE-DESTROYED.
+     PERFORM DESTROYED-LOOP
+         UNTIL INDES-EOF-SWITCH = 'Y'.
+     CLOSE INDES
+           RPTDES.
+ ALL-LOOP.
+     ADD 1 TO WS-INALL-COUNT.
+     MOVE GRAIN-SERIAL-ALL TO SERIAL-OUT.
+     IF GRAIN-STATUS-ALL = 0
+         MOVE "ACTIVE" TO STATUS-OUT
+     ELSE IF GRAIN-STATUS-ALL = 1
+         MOVE "SPENT" TO STATUS-OUT
+     ELSE IF GRAIN-STATUS-ALL = 3
+         MOVE "DESTROYED" TO STATUS-OUT
+     ELSE
+         MOVE "OTHER" TO STATUS-OUT
+     END-IF.
+     MOVE GRAIN-TYPE-ALL TO TYPE-OUT.
+     MOVE GRAIN-FORMULA-ALL TO FORMULA-OUT.
+     MOVE GRAIN-QA-ALL TO QA-OUT.
+     MOVE GRAIN-WEIGHT-ALL TO WEIGHT-OUT.
+     MOVE OUT-RECORD TO OUTFILE-ALL.
+     WRITE OUTFILE-ALL.
+     ADD 1 TO WS-RPTALL-COUNT.
+     READ INALL
+         AT END
+             MOVE 'Y' TO INALL-EOF-SWITCH
+     END-READ.
+ ACTIVE-LOOP.
+     ADD 1 TO WS-INACT-COUNT.
+     MOVE GRAIN-SERIAL-ACT TO SERIAL-OUT.
+     IF GRAIN-STATUS-ACT = 0
+         MOVE "ACTIVE" TO STATUS-OUT
+     ELSE IF GRAIN-STATUS-ACT = 1
+         MOVE "SPENT" TO STATUS-OUT
+     ELSE IF GRAIN-STATUS-ACT = 3
+         MOVE "DESTROYED" TO STATUS-OUT
+     ELSE
+         MOVE "OTHER" TO STATUS-OUT
+     END-IF.
+     MOVE GRAIN-TYPE-ACT TO TYPE-OUT.
+     MOVE GRAIN-FORMULA-ACT TO FORMULA-OUT.
+     MOVE GRAIN-QA-ACT TO QA-OUT.
+     MOVE GRAIN-WEIGHT-ACT TO WEIGHT-OUT.
+     MOVE OUT-RECORD TO OUTFILE-ACTIVE.
+     WRITE OUTFILE-ACTIVE.
+     ADD 1 TO WS-RPTACT-COUNT.
+     READ INACT
+         AT END
+             MOVE 'Y' TO INACT-EOF-SWITCH
+     END-READ.
+ SPENT-LOOP.
+     ADD 1 TO WS-INSPN-COUNT.
+     MOVE GRAIN-SERIAL-SPN TO SERIAL-OUT.
+     IF GRAIN-STATUS-SPN = 0
+         MOVE "ACTIVE" TO STATUS-OUT
+     ELSE IF GRAIN-STATUS-SPN = 1
+         MOVE "SPENT" TO STATUS-OUT
+     ELSE IF GRAIN-STATUS-SPN = 3
+         MOVE "DESTROYED" TO STATUS-OUT
+     ELSE
+         MOVE "OTHER" TO STATUS-OUT
+     END-IF.
+     MOVE GRAIN-TYPE-SPN TO TYPE-OUT.
+     MOVE GRAIN-FORMULA-SPN TO FORMULA-OUT.
+     MOVE GRAIN-QA-SPN TO QA-OUT.
+     MOVE GRAIN-WEIGHT-SPN TO WEIGHT-OUT.
+     MOVE OUT-RECORD TO OUTFILE-SPENT.
+     WRITE OUTFILE-SPENT.
+     ADD 1 TO WS-RPTSPN-COUNT.
+     READ INSPN
+         AT END
+             MOVE 'Y' TO INSPN-EOF-SWITCH
+     END-READ.
+ DESTROYED-LOOP.
+     ADD 1 TO WS-INDES-COUNT.
+     MOVE GRAIN-SERIAL-DES TO SERIAL-OUT.
+     IF GRAIN-STATUS-DES = 0
+         MOVE "ACTIVE" TO STATUS-OUT
+     ELSE IF GRAIN-STATUS-DES = 1
+         MOVE "SPENT" TO STATUS-OUT
+     ELSE IF GRAIN-STATUS-DES = 3
+         MOVE "DESTROYED" TO STATUS-OUT
+     ELSE
+         MOVE "OTHER" TO STATUS-OUT
+     END-IF.
+     MOVE GRAIN-TYPE-DES TO TYPE-OUT.
+     MOVE GRAIN-FORMULA-DES TO FORMULA-OUT.
+     MOVE GRAIN-QA-DES TO QA-OUT.
+     MOVE GRAIN-WEIGHT-DES TO WEIGHT-OUT.
+     MOVE OUT-RECORD TO OUTFILE-DESTROYED.
+     WRITE OUTFILE-DESTROYED.
+     ADD 1 TO WS-RPTDES-COUNT.
+     READ INDES
+         AT END
+             MOVE 'Y' TO INDES-EOF-SWITCH
+     END-READ.
+ DISPLAY-STATS.
+     DISPLAY '********************************************'.
+     DISPLAY '**** INPUT FILES ***************************'.
+     DISPLAY '*** FILE INALL ROWS = ' WS-INALL-COUNT.
+     DISPLAY '*** FILE INACT ROWS = ' WS-INACT-COUNT.
+     DISPLAY '*** FILE INSPN ROWS = ' WS-INSPN-COUNT.
+     DISPLAY '*** FILE INDES ROWS = ' WS-INDES-COUNT.
+     DISPLAY '**** OUTPUT FILES ***************************'.
+     DISPLAY '*** FILE RPTALL ROWS = ' WS-RPTALL-COUNT.
+     DISPLAY '*** FILE RPTACT ROWS = ' WS-RPTACT-COUNT.
+     DISPLAY '*** FILE RPTSPN ROWS = ' WS-RPTSPN-COUNT.
+     DISPLAY '*** FILE RPTDES ROWS = ' WS-RPTDES-COUNT.
+     DISPLAY '********************************************'.
+=== COBOL END ===
+
+=== PYTHON START ===
+import datetime
+import os
+
+# Define the input and output files
+inall_file = '/home/knallathambi/workspace/cobol_apps/tmp/INALL.dat'
+inact_file = '/home/knallathambi/workspace/cobol_apps/tmp/INACT.dat'
+inspn_file = '/home/knallathambi/workspace/cobol_apps/tmp/INSPN.dat'
+indes_file = '/home/knallathambi/workspace/cobol_apps/tmp/INDES.dat'
+rptall_file = '/home/knallathambi/workspace/cobol_apps/tmp/RPTALL.dat'
+rptact_file = '/home/knallathambi/workspace/cobol_apps/tmp/RPTACT.dat'
+rptspn_file = '/home/knallathambi/workspace/cobol_apps/tmp/RPTSPN.dat'
+rptdes_file = '/home/knallathambi/workspace/cobol_apps/tmp/RPTDES.dat'
+
+# Define the record layouts
+inall_record_layout = [
+    ('grain_serial_all', '12s'),
+    ('grain_type_all', '10s'),
+    ('grain_formula_all', '15s'),
+    ('grain_status_all', '1s'),
+    ('grain_qa_all', '4s'),
+    ('grain_quality_all', '2s'),
+    ('filler1', '10s'),
+    ('filler2', '10s'),
+    ('grain_weight_all', '10s'),
+    ('filler3', '375s')
+]
+
+inact_record_layout = [
+    ('grain_serial_act', '12s'),
+    ('grain_type_act', '10s'),
+    ('grain_formula_act', '15s'),
+    ('grain_status_act', '1s'),
+    ('grain_qa_act', '4s'),
+    ('grain_quality_act', '2s'),
+    ('filler1', '10s'),
+    ('filler2', '10s'),
+    ('grain_weight_act', '10s'),
+    ('filler3', '375s')
+]
+
+inspn_record_layout = [
+    ('grain_serial_spn', '12s'),
+    ('grain_type_spn', '10s'),
+    ('grain_formula_spn', '15s'),
+    ('grain_status_spn', '1s'),
+    ('grain_qa_spn', '4s'),
+    ('grain_quality_spn', '2s'),
+    ('filler1', '10s'),
+    ('filler2', '10s'),
+    ('grain_weight_spn', '10s'),
+    ('filler3', '375s')
+]
+
+indes_record_layout = [
+    ('grain_serial_des', '12s'),
+    ('grain_type_des', '10s'),
+    ('grain_formula_des', '15s'),
+    ('grain_status_des', '1s'),
+    ('grain_qa_des', '4s'),
+    ('grain_quality_des', '2s'),
+    ('filler1', '10s'),
+    ('filler2', '10s'),
+    ('grain_weight_des', '10s'),
+    ('filler3', '375s')
+]
+
+# Define the output record layout
+out_record_layout = [
+    ('serial_out', '12s'),
+    ('filler1', '2s'),
+    ('status_out', '10s'),
+    ('filler2', '2s'),
+    ('type_out', '10s'),
+    ('filler3', '2s'),
+    ('formula_out', '15s'),
+    ('filler4', '2s'),
+    ('qa_out', '4s'),
+    ('filler5', '2s'),
+    ('weight_out', '10s'),
+    ('filler6', '1s')
+]
+
+# Define the header and footer records
+header_1 = 'HAYNIE RESEARCH & DEVELOPMENT'
+header_all = 'PROPELLANT GRAIN INVENTORY REPORT - ALL'
+header_active = 'PROPELLANT GRAIN INVENTORY REPORT - ACTIVE'
+header_spent = 'PROPELLANT GRAIN INVENTORY REPORT - SPENT'
+header_destroyed = 'PROPELLANT GRAIN INVENTORY REPORT - DESTROYED'
+header_3 = 'SERIAL'.ljust(14) + 'STATUS'.ljust(12) + 'TYPE'.ljust(12) + 'FORMULA'.ljust(17) + 'QA'.ljust(6) + 'WEIGHT'.ljust(11)
+header_4 = '------------'.ljust(12) + '----------'.ljust(10) + '----------'.ljust(10) + '---------------'.ljust(15) + '----'.ljust(4) + '-----------'.ljust(11)
+date_line = 'REPORT DATE:'.ljust(12) + datetime.datetime.now().strftime('%Y/%m/%d')
+
+# Open the input and output files
+with open(inall_file, 'rb') as inall, open(inact_file, 'rb') as inact, open(inspn_file, 'rb') as inspn, open(indes_file, 'rb') as indes, \
+        open(rptall_file, 'w') as rptall, open(rptact_file, 'w') as rptact, open(rptspn_file, 'w') as rptspn, open(rptdes_file, 'w') as rptdes:
+
+    # Initialize the counters
+    inall_count = 0
+    inact_count = 0
+    inspn_count = 0
+    indes_count = 0
+    rptall_count = 0
+    rptact_count = 0
+    rptspn_count = 0
+    rptdes_count = 0
+
+    # Read the first record from each input file
+    inall_record = inall.read(sum(length for _, length in inall_record_layout))
+    inact_record = inact.read(sum(length for _, length in inact_record_layout))
+    inspn_record = inspn.read(sum(length for _, length in inspn_record_layout))
+    indes_record = indes.read(sum(length for _, length in indes_record_layout))
+
+    # Write the header records to the output files
+    rptall.write(header_1.encode('ascii') + b'\n')
+    rptall.write(header_all.encode('ascii') + b'\n')
+    rptall.write(date_line.encode('ascii') + b'\n')
+    rptall.write(b'\n')
+    rptall.write(header_3.encode('ascii') + b'\n')
+    rptall.write(header_4.encode('ascii') + b'\n')
+
+    rptact.write(header_1.encode('ascii') + b'\n')
+    rptact.write(header_active.encode('ascii') + b'\n')
+    rptact.write(date_line.encode('ascii') + b'\n')
+    rptact.write(b'\n')
+    rptact.write(header_3.encode('ascii') + b'\n')
+    rptact.write(header_4.encode('ascii') + b'\n')
+
+    rptspn.write(header_1.encode('ascii') + b'\n')
+    rptspn.write(header_spent.encode('ascii') + b'\n')
+    rptspn.write(date_line.encode('ascii') + b'\n')
+    rptspn.write(b'\n')
+    rptspn.write(header_3.encode('ascii') + b'\n')
+    rptspn.write(header_4.encode('ascii') + b'\n')
+
+    rptdes.write(header_1.encode('ascii') + b'\n')
+    rptdes.write(header_destroyed.encode('ascii') + b'\n')
+    rptdes.write(date_line.encode('ascii') + b'\n')
+    rptdes.write(b'\n')
+    rptdes.write(header_3.encode('ascii') + b'\n')
+    rptdes.write(header_4.encode('ascii') + b'\n')
+
+    # Process the input records
+    while inall_record or inact_record or inspn_record or indes_record:
+        # Process the INALL record
+        if inall_record:
+            inall_count += 1
+            grain_serial_all, grain_type_all, grain_formula_all, grain_status_all, grain_qa_all, grain_quality_all, _, _, grain_weight_all, _ = inall_record
+            status_out = 'ACTIVE' if grain_status_all == b'0' else 'SPENT' if grain_status_all == b'1' else 'DESTROYED' if grain_status_all == b'3' else 'OTHER'
+            out_record = (grain_serial_all, b' ', status_out.encode('ascii'), b' ', grain_type_all, b' ', grain_formula_all, b' ', grain_qa_all, b' ', grain_weight_all, b'G')
+            rptall.write(''.join(out_record).encode('ascii') + b'\n')
+            rptall_count += 1
+            inall_record = inall.read(sum(length for _, length in inall_record_layout))
+
+        # Process the INACT record
+        if inact_record:
+            inact_count += 1
+            grain_serial_act, grain_type_act, grain_formula_act, grain_status_act, grain_qa_act, grain_quality_act, _, _, grain_weight_act, _ = inact_record
+            status_out = 'ACTIVE' if grain_status_act == b'0' else 'SPENT' if grain_status_act == b'1' else 'DESTROYED' if grain_status_act == b'3' else 'OTHER'
+            out_record = (grain_serial_act, b' ', status_out.encode('ascii'), b' ', grain_type_act, b' ', grain_formula_act, b' ', grain_qa_act, b' ', grain_weight_act, b'G')
+            rptact.write(''.join(out_record).encode('ascii') + b'\n')
+            rptact_count += 1
+            inact_record = inact.read(sum(length for _, length in inact_record_layout))
+
+        # Process the INSPN record
+        if inspn_record:
+            inspn_count += 1
+            grain_serial_spn, grain_type_spn, grain_formula_spn, grain_status_spn, grain_qa_spn, grain_quality_spn, _, _, grain_weight_spn, _ = inspn_record
+            status_out = 'ACTIVE' if grain_status_spn == b'0' else 'SPENT' if grain_status_spn == b'1' else 'DESTROYED' if grain_status_spn == b'3' else 'OTHER'
+            out_record = (grain_serial_spn, b' ', status_out.encode('ascii'), b' ', grain_type_spn, b' ', grain_formula_spn, b' ', grain_qa_spn, b' ', grain_weight_spn, b'G')
+            rptspn.write(''.join(out_record).encode('ascii') + b'\n')
+            rptspn_count += 1
+            inspn_record = inspn.read(sum(length for _, length in inspn_record_layout))
+
+        # Process the INDES record
+        if indes_record:
+            indes_count += 1
+            grain_serial_des, grain_type_des, grain_formula_des, grain_status_des, grain_qa_des, grain_quality_des, _, _, grain_weight_des, _ = indes_record
+            status_out = 'ACTIVE' if grain_status_des == b'0' else 'SPENT' if grain_status_des == b'1' else 'DESTROYED' if grain_status_des == b'3' else 'OTHER'
+            out_record = (grain_serial_des, b' ', status_out.encode('ascii'), b' ', grain_type_des, b' ', grain_formula_des, b' ', grain_qa_des, b' ', grain_weight_des, b'G')
+            rptdes.write(''.join(out_record).encode('ascii') + b'\n')
+            rptdes_count += 1
+            indes_record = indes.read(sum(length for _, length in indes_record_layout))
+
+    # Display the statistics
+    print('********************************************')
+    print('**** INPUT FILES ***************************')
+    print('*** FILE INALL ROWS =', inall_count)
+    print('*** FILE INACT ROWS =', inact_count)
+    print('*** FILE INSPN ROWS =', inspn_count)
+    print('*** FILE INDES ROWS =', indes_count)
+    print('**** OUTPUT FILES ***************************')
+    print('*** FILE RPTALL ROWS =', rptall_count)
+    print('*** FILE RPTACT ROWS =', rptact_count)
+    print('*** FILE RPTSPN ROWS =', rptspn_count)
+    print('*** FILE RPTDES ROWS =', rptdes_count)
+    print('********************************************')
+
+def main():
+    PINVRPT()
+
+if __name__ == "__main__":
+    main()
+
+=== PYTHON END ===
+        

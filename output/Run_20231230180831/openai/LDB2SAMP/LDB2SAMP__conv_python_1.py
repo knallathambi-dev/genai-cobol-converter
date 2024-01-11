@@ -1,0 +1,59 @@
+from sqlalchemy import create_engine, Table, MetaData
+from sqlalchemy.sql import select, func, text
+
+engine = create_engine("oracle+cx_oracle://user:password@localhost/dbname")
+
+metadata = MetaData()
+
+employee = Table("EMPLOYEE", metadata, autoload_with=engine)
+
+
+def main():
+    with engine.connect() as connection:
+        record_count = connection.execute(
+            select([func.count()]).select_from(employee)
+        ).scalar()
+
+        if record_count is not None:
+            print(f"THE NUMBER OF EMPLOYEES IN THE DATABASE IS {record_count}")
+        else:
+            print("NO EMPLOYEES FOUND IN DATABASE")
+
+        next_emp = connection.execute(select([func.max(employee.c.EMPNO)])).scalar()
+
+        if next_emp is not None:
+            next_emp_no = int(next_emp) + 10
+
+            new_employee = {
+                "EMPNO": next_emp_no,
+                "FIRSTNME": "FRANK",
+                "MIDINIT": "Y",
+                "LASTNAME": "JONES",
+                "WORKDEPT": "A00",
+                "PHONENO": "1234",
+                "HIREDATE": "04-30-1979",
+                "JOB": "Clerk",
+                "EDLEVEL": 15,
+                "SEX": "M",
+                "BIRTHDATE": "05-30-1954",
+                "SALARY": "36170",
+                "BONUS": "400",
+                "COMM": "2387",
+            }
+
+            connection.execute(employee.insert().values(new_employee))
+
+            result = connection.execute(
+                select([employee]).where(employee.c.EMPNO == next_emp_no)
+            ).first()
+
+            if result is not None:
+                print(f"{result.FIRSTNME} {result.LASTNAME} ADDED TO THE DATABASE")
+            else:
+                print("SQL ERROR")
+        else:
+            print("SQL ERROR")
+
+
+if __name__ == "__main__":
+    main()

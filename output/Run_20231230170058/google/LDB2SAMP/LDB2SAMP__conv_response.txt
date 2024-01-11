@@ -1,0 +1,60 @@
+```python
+import sqlalchemy
+
+# Create a connection to the Oracle database
+engine = sqlalchemy.create_engine('oracle://username:password@host:port/database')
+
+# Create a session
+session = engine.connect()
+
+# Get the number of employees in the database
+record_count = session.execute("SELECT COUNT(*) FROM EMPLOYEE").fetchone()[0]
+
+# Display the number of employees
+print("THE NUMBER OF EMPLOYEES IN THE DATABASE IS", record_count)
+
+# If there are no employees, display a message
+if record_count == 0:
+    print("NO EMPLOYEES FOUND IN DATABASE")
+
+# Otherwise, get the next employee number
+else:
+    next_emp_no = session.execute("SELECT MAX(EMPNO) FROM EMPLOYEE").fetchone()[0] + 10
+
+    # Insert a new employee into the database
+    session.execute(
+        "INSERT INTO EMPLOYEE (EMPNO, FIRSTNME, MIDINIT, LASTNAME, WORKDEPT, PHONENO, HIREDATE, JOB, EDLEVEL, SEX, BIRTHDATE, SALARY, BONUS, COMM) "
+        "VALUES (:EMPNO, :FIRSTNME, :MIDINIT, :LASTNAME, :WORKDEPT, :PHONENO, :HIREDATE, :JOB, :EDLEVEL, :SEX, :BIRTHDATE, :SALARY, :BONUS, :COMM)",
+        {
+            "EMPNO": next_emp_no,
+            "FIRSTNME": "FRANK",
+            "MIDINIT": "Y",
+            "LASTNAME": "JONES",
+            "WORKDEPT": "A00",
+            "PHONENO": "1234",
+            "HIREDATE": "04-30-1979",
+            "JOB": "Clerk",
+            "EDLEVEL": 15,
+            "SEX": "M",
+            "BIRTHDATE": "05-30-1954",
+            "SALARY": 36170,
+            "BONUS": 400,
+            "COMM": 2387,
+        }
+    )
+
+    # Commit the changes
+    session.commit()
+
+    # Get the newly inserted employee's data
+    employee = session.execute(
+        "SELECT * FROM EMPLOYEE WHERE EMPNO = :EMPNO",
+        {"EMPNO": next_emp_no}
+    ).fetchone()
+
+    # Display the newly inserted employee's data
+    print(employee.FIRSTNME, employee.LASTNAME, "ADDED TO THE DATABASE")
+
+# Close the session
+session.close()
+```

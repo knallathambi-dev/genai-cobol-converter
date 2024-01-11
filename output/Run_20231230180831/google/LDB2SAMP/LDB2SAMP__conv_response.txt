@@ -1,0 +1,46 @@
+```python
+import sqlalchemy
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Float
+import cx_Oracle
+
+engine = create_engine('oracle://username:password@host:port/servicename')
+metadata = MetaData()
+employee = Table('EMPLOYEE', metadata,
+                 Column('EMPNO', Integer, primary_key=True),
+                 Column('FIRSTNME', String(12)),
+                 Column('MIDINIT', String(1)),
+                 Column('LASTNAME', String(15)),
+                 Column('WORKDEPT', String(3)),
+                 Column('PHONENO', String(4)),
+                 Column('HIREDATE', String(10)),
+                 Column('JOB', String(8)),
+                 Column('EDLEVEL', Integer),
+                 Column('SEX', String(1)),
+                 Column('BIRTHDATE', String(10)),
+                 Column('SALARY', Float),
+                 Column('BONUS', Float),
+                 Column('COMM', Float))
+
+metadata.create_all(engine)
+
+conn = engine.connect()
+
+recordcount = conn.execute("SELECT COUNT(*) FROM EMPLOYEE").fetchone()[0]
+if recordcount == 0:
+    print("NO EMPLOYEES FOUND IN DATABASE")
+else:
+    print(f"THE NUMBER OF EMPLOYEES IN THE DATABASE IS {recordcount}")
+
+nextemp = conn.execute("SELECT MAX (EMPNO) FROM EMPLOYEE").fetchone()[0]
+nextempno = nextemp + 10
+
+conn.execute("INSERT INTO EMPLOYEE VALUES(:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11, :12, :13, :14)",
+             [nextempno, 'FRANK', 'Y', 'JONES', 'A00', '1234', '04-30-1979', 'Clerk', 15, 'M', '05-30-1954', 36170, 400, 2387])
+
+conn.commit()
+
+result = conn.execute("SELECT * FROM EMPLOYEE WHERE EMPNO = :1", [nextempno]).fetchone()
+print(f"{result[1]} {result[3]} ADDED TO THE DATABASE")
+
+conn.close()
+```

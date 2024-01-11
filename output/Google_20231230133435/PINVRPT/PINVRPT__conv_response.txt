@@ -1,0 +1,237 @@
+```python
+import datetime
+
+# Define the input and output files
+inall = open("PINV", "rb")
+inact = open("PACT", "rb")
+inspn = open("PSPN", "rb")
+indes = open("PDES", "rb")
+rptall = open("RPTALL", "w")
+rptact = open("RPTACT", "w")
+rptspn = open("RPTSPN", "w")
+rptdes = open("RPTDES", "w")
+
+# Define the record layouts
+inall_record_all = {
+    "grain_serial_all": (1, 12),
+    "grain_type_all": (13, 10),
+    "grain_formula_all": (23, 15),
+    "grain_status_all": (38, 1),
+    "grain_qa_all": (39, 4),
+    "grain_quality_all": (43, 2),
+    "filler1": (55, 10),
+    "filler2": (65, 10),
+    "grain_weight_all": (75, 10),
+    "filler3": (85, 375),
+}
+
+inall_record_act = {
+    "grain_serial_act": (1, 12),
+    "grain_type_act": (13, 10),
+    "grain_formula_act": (23, 15),
+    "grain_status_act": (38, 1),
+    "grain_qa_act": (39, 4),
+    "grain_quality_act": (43, 2),
+    "filler1": (55, 10),
+    "filler2": (65, 10),
+    "grain_weight_act": (75, 10),
+    "filler3": (85, 375),
+}
+
+inall_record_spn = {
+    "grain_serial_spn": (1, 12),
+    "grain_type_spn": (13, 10),
+    "grain_formula_spn": (23, 15),
+    "grain_status_spn": (38, 1),
+    "grain_qa_spn": (39, 4),
+    "grain_quality_spn": (43, 2),
+    "filler1": (55, 10),
+    "filler2": (65, 10),
+    "grain_weight_spn": (75, 10),
+    "filler3": (85, 375),
+}
+
+inall_record_des = {
+    "grain_serial_des": (1, 12),
+    "grain_type_des": (13, 10),
+    "grain_formula_des": (23, 15),
+    "grain_status_des": (38, 1),
+    "grain_qa_des": (39, 4),
+    "grain_quality_des": (43, 2),
+    "filler1": (55, 10),
+    "filler2": (65, 10),
+    "grain_weight_des": (75, 10),
+    "filler3": (85, 375),
+}
+
+# Define the output record layout
+out_record = {
+    "serial_out": (1, 12),
+    "filler1": (13, 2),
+    "status_out": (15, 10),
+    "filler2": (25, 2),
+    "type_out": (27, 10),
+    "filler3": (37, 2),
+    "formula_out": (39, 15),
+    "filler4": (54, 2),
+    "qa_out": (56, 4),
+    "filler5": (60, 2),
+    "weight_out": (62, 10),
+    "filler6": (72, 1),
+}
+
+# Define the date line layout
+date_line = {
+    "filler1": (1, 12),
+    "filler2": (13, 1),
+    "dt_year": (14, 4),
+    "filler3": (18, 1),
+    "dt_month": (19, 2),
+    "filler4": (21, 1),
+    "dt_day": (22, 2),
+}
+
+# Define the header layouts
+header_1 = {
+    "filler1": (1, 100),
+}
+
+header_all = {
+    "filler1": (1, 100),
+}
+
+header_active = {
+    "filler1": (1, 100),
+}
+
+header_spent = {
+    "filler1": (1, 100),
+}
+
+header_destroyed = {
+    "filler1": (1, 100),
+}
+
+header_3 = {
+    "filler1": (1, 14),
+    "filler2": (15, 12),
+    "filler3": (27, 12),
+    "filler4": (39, 17),
+    "filler5": (56, 6),
+    "filler6": (62, 11),
+}
+
+header_4 = {
+    "filler1": (1, 12),
+    "filler2": (13, 2),
+    "filler3": (15, 10),
+    "filler4": (25, 2),
+    "filler5": (27, 10),
+    "filler6": (37, 2),
+    "filler7": (39, 15),
+    "filler8": (54, 2),
+    "filler9": (56, 4),
+    "filler10": (60, 2),
+    "filler11": (62, 11),
+}
+
+# Define the switches
+switches = {
+    "inall_eof_switch": "N",
+    "inact_eof_switch": "N",
+    "inspn_eof_switch": "N",
+    "indes_eof_switch": "N",
+}
+
+# Get the current date
+current_date = datetime.datetime.now()
+
+# Move the current date to the WS-CURRENT-DATE variable
+ws_current_date = {
+    "ws_year": current_date.year,
+    "ws_month": current_date.month,
+    "ws_day": current_date.day,
+    "ws_hours": current_date.hour,
+    "ws_minutes": current_date.minute,
+    "ws_seconds": current_date.second,
+    "ws_hund_second": current_date.microsecond // 10000,
+    "ws_gmt": "EST",
+}
+
+# Move the year, month, and day to the DT-YEAR, DT-MONTH, and DT-DAY variables
+dt_year = ws_current_date["ws_year"]
+dt_month = ws_current_date["ws_month"]
+dt_day = ws_current_date["ws_day"]
+
+# Call the report-all function
+report_all()
+
+# Call the report-active function
+report_active()
+
+# Call the report-spent function
+report_spent()
+
+# Call the report-destroyed function
+report_destroyed()
+
+# Stop the program
+exit()
+
+
+def report_all():
+    # Open the input and output files
+    with open("PINV", "rb") as inall, open("RPTALL", "w") as rptall:
+        # Read the first record from the input file
+        inall_record = inall.read(85)
+
+        # Check if the end of file has been reached
+        while inall_record:
+            # Move the grain serial number to the SERIAL-OUT field
+            serial_out = inall_record[inall_record_all["grain_serial_all"][0] - 1 : inall_record_all["grain_serial_all"][1]]
+
+            # Check the grain status and move the appropriate value to the STATUS-OUT field
+            if inall_record[inall_record_all["grain_status_all"][0] - 1] == 0:
+                status_out = "ACTIVE"
+            elif inall_record[inall_record_all["grain_status_all"][0] - 1] == 1:
+                status_out = "SPENT"
+            elif inall_record[inall_record_all["grain_status_all"][0] - 1] == 3:
+                status_out = "DESTROYED"
+            else:
+                status_out = "OTHER"
+
+            # Move the grain type to the TYPE-OUT field
+            type_out = inall_record[inall_record_all["grain_type_all"][0] - 1 : inall_record_all["grain_type_all"][1]]
+
+            # Move the grain formula to the FORMULA-OUT field
+            formula_out = inall_record[inall_record_all["grain_formula_all"][0] - 1 : inall_record_all["grain_formula_all"][1]]
+
+            # Move the grain QA to the QA-OUT field
+            qa_out = inall_record[inall_record_all["grain_qa_all"][0] - 1 : inall_record_all["grain_qa_all"][1]]
+
+            # Move the grain weight to the WEIGHT-OUT field
+            weight_out = inall_record[inall_record_all["grain_weight_all"][0] - 1 : inall_record_all["grain_weight_all"][1]]
+
+            # Move the output record to the output file
+            rptall.write(
+                serial_out
+                + "  "
+                + status_out
+                + "          "
+                + type_out
+                + "          "
+                + formula_out
+                + "               "
+                + qa_out
+                + "    "
+                + weight_out
+                + "G\n"
+            )
+
+            # Read the next record from the input file
+            inall_record = inall.read(85)
+
+
+def report_active():
+    # Open the input and output files
+    with open("PACT", "rb") as inact, open("RPTACT", "w") as rpt
